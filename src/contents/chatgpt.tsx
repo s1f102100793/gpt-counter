@@ -1,8 +1,10 @@
-import type { PlasmoCSConfig, PlasmoGetInlineAnchor, PlasmoGetInlineAnchorList } from 'plasmo'
-import React, { useEffect, useState } from 'react'
+import { useStorage } from '@plasmohq/storage/hook';
+import type { PlasmoGetInlineAnchorList } from 'plasmo';
+import React from 'react';
 
-export const config: PlasmoCSConfig = {
-  matches: ['https://chat.openai.com/*']
+export const config = {
+  matches: ['https://chat.openai.com/*'],
+  all_frames: true,
 }
 
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
@@ -11,39 +13,16 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
   return parentElements as unknown as NodeList;
 };
 
-
-export const getShadowHostId = () => 'custom-button-container'
-
 const CustomButton = () => {
-  const [showButton, setShowButton] = useState(false);
-
-  useEffect(() => {
-    const checkConditions = async () => {
-      const someCondition = true; 
-      setShowButton(someCondition);
-    };
-
-    checkConditions();
-  }, []);
-
+  const [count] = useStorage("myCountKey", 0);
+  const n = 3 - count;  
   return (
-    <>
-      {showButton && (
-        <button style={{
-          position: 'relative',
-          textAlign: 'center',
-          margin: '10px',
-          padding: '5px 10px',
-          fontWeight: 'bold',
-          color: '#FFFFFF',
-          backgroundColor: '#007BFF',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}>
-          Custom Button
-        </button>
-      )}
-    </>
+    <div style={{position:'relative', backgroundColor:'black', width: '100%'}}>
+      <div style={{position:'relative', width:'40rem'}}>
+        <div style={{color: 'white'}}>gugure</div>
+        <div style={{color:'white'}}>残りの回数は{n}回です</div>
+      </div>
+    </div>
   );
 };
 
