@@ -1,9 +1,13 @@
+import { Storage } from "@plasmohq/storage"
+
+const storage: Storage = new Storage()
+
 export const config = {
   matches: ["https://chat.openai.com/*"],
   all_frames: true
 }
 
-let observer = null
+let observer: MutationObserver | null = null
 
 const countDefaultElements = (): Promise<number> => {
   return new Promise((resolve) => {
@@ -28,6 +32,9 @@ const observeDOMChanges = async (): Promise<void> => {
       if (updateCount - currentCount === 1) {
         console.log("ここで保存")
         currentCount = updateCount
+        const nowCount = (await storage.get("myCountKey")) as number
+        console.log("nowCount", nowCount)
+        await storage.set("myCountKey", nowCount + 1)
       }
     }
 
@@ -45,7 +52,6 @@ const observeDOMChanges = async (): Promise<void> => {
 const stopObserving = () => {
   if (observer) {
     observer.disconnect()
-    console.log("Stopped observing DOM changes.")
   }
 }
 
@@ -54,7 +60,6 @@ document.addEventListener("click", function (event) {
   const anchor = target.closest("a")
 
   if (anchor && anchor.href) {
-    console.log("リンクがクリックされました。URL:", anchor.href)
     stopObserving()
     observeDOMChanges()
   }

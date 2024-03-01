@@ -14,7 +14,7 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
 };
 
 const CustomButton = () => {
-  const [count] = useStorage("myCountKey", 0);
+  const [count] = useStorage("myCountKey");
   const n = 3 - count;  
   return (
     <div style={{position:'relative', backgroundColor:'black', width: '100%'}}>
