@@ -3,7 +3,7 @@ export const config = {
   all_frames: true
 }
 
-const getElementsAfterDelay = (): Promise<number> => {
+const countDefaultElements = (): Promise<number> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const elements = document.querySelectorAll(
@@ -14,21 +14,7 @@ const getElementsAfterDelay = (): Promise<number> => {
   })
 }
 
-let currentCount: number = 0
-
-const mutationCallback: MutationCallback = (
-  mutationsList: MutationRecord[]
-) => {
-  mutationsList.forEach((mutation: MutationRecord) => {
-    if (mutation.type === "childList") {
-      mutation.addedNodes.forEach((node: Node) => {
-        searchForClass(node)
-      })
-    }
-  })
-}
-
-const searchForClass = (node: Node): number => {
+const searchElementForClass = (node: Node): number => {
   let count = 0
   if (node.nodeType === Node.ELEMENT_NODE) {
     const element = node as Element
@@ -36,19 +22,37 @@ const searchForClass = (node: Node): number => {
       count = 1
     }
     element.childNodes.forEach((childNode) => {
-      count += searchForClass(childNode)
+      count += searchElementForClass(childNode)
     })
   }
   return count
 }
 
-const observer = new MutationObserver(mutationCallback)
+let currentCount = 0
 
 const observeDOMChanges = async (): Promise<void> => {
   const maxTarget = document.querySelector(".flex-1.overflow-hidden")
   if (maxTarget) {
-    const initialCount = await getElementsAfterDelay()
-    currentCount = initialCount
+    currentCount = await countDefaultElements()
+
+    const mutationCallback: MutationCallback = (
+      mutationsList: MutationRecord[]
+    ) => {
+      mutationsList.forEach((mutation: MutationRecord) => {
+        if (mutation.type === "childList") {
+          let addedCount = 0
+          mutation.addedNodes.forEach((node: Node) => {
+            addedCount += searchElementForClass(node)
+          })
+
+          if (addedCount > 0) {
+            console.log("Added nodes:", addedCount)
+          }
+        }
+      })
+    }
+
+    const observer = new MutationObserver(mutationCallback)
     observer.observe(maxTarget, { childList: true, subtree: true })
     console.log("Observing DOM changes...")
   } else {
