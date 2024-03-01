@@ -1,5 +1,11 @@
 import { useStorage } from "@plasmohq/storage/hook";
+import type { PlasmoCSConfig } from "plasmo";
 import { useEffect } from "react";
+
+export const config: PlasmoCSConfig = {
+  matches: ['https://chat.openai.com/*'],
+  all_frames: true,
+}
 
 const HidePromptTextarea = () => {
   const [count] = useStorage("myCountKey"); 

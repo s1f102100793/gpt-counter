@@ -1,10 +1,11 @@
 import { Storage } from "@plasmohq/storage"
+import type { PlasmoCSConfig } from "plasmo"
 
 const storage: Storage = new Storage()
 
-export const config = {
-  matches: ["https://chat.openai.com/*"],
-  all_frames: true
+export const config: PlasmoCSConfig = {
+  matches: ['https://chat.openai.com/*'],
+  all_frames: true,
 }
 
 let observer: MutationObserver | null = null
