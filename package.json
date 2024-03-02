@@ -5,14 +5,18 @@
   "description": "ChatGPT suppression service",
   "author": "Plasmo Corp. <foss@plasmo.com>",
   "scripts": {
-    "dev": "plasmo dev",
+    "dev": "run-p dev:*",
+    "dev:plasmo": "plasmo dev",
+    "dev:hcm": "hcm '**/*.module.css' -w --ignore-path .gitignore",
     "build": "plasmo build",
     "package": "plasmo package",
     "lint": "pnpm run lint:js && pnpm run lint:prettier && pnpm run lint:style",
     "lint:js": "eslint --ext .ts,.tsx,.js --ignore-path .gitignore .",
     "lint:prettier": "prettier --check \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore",
     "lint:style": "stylelint \"**/*.css\" --ignore-path .gitignore",
-    "linct:fix": "pnpm lint:js --fix && prettier --write \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore && pnpm lint:style -- --fix"
+    "linct:fix": "pnpm lint:js --fix && prettier --write \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore && pnpm lint:style -- --fix",
+    "hcm": "hcm '**/*.module.css'",
+    "typecheck": "pnpm hcm && tsc --noEmit"
   },
   "dependencies": {
     "@plasmohq/messaging": "^0.6.2",
@@ -21,10 +25,14 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
+    "happy-css-modules": "^2.1.2",
+    "less": "^4.2.0",
     "plasmo": "0.84.2",
+    "postcss": "^8.4.35",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.50.1",
+    "sass": "^1.71.1",
     "stylelint": "^16.2.1",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recess-order": "^4.6.0",
@@ -37,6 +45,7 @@
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "3.2.4",
     "typescript": "5.3.3"
   },

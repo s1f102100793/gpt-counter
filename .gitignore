@@ -31,3 +31,6 @@ dist/
 
 # typescript
 .tsbuildinfo
+
+*.css.d.ts
+*.css.d.ts.map
