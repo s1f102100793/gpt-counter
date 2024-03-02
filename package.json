@@ -7,13 +7,20 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "lint": "pnpm run lint:js && pnpm run lint:prettier && pnpm run lint:style",
+    "lint:js": "eslint --ext .ts,.tsx,.js --ignore-path .gitignore .",
+    "lint:prettier": "prettier --check \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore",
+    "lint:style": "stylelint \"**/*.css\" --ignore-path .gitignore",
+    "linct:fix": "pnpm lint:js --fix && prettier --write \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore && pnpm lint:style -- --fix"
   },
   "dependencies": {
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
     "plasmo": "0.84.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -29,6 +36,7 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "3.2.4",
     "typescript": "5.3.3"
   },
