@@ -19,6 +19,10 @@
     "typecheck": "pnpm hcm && tsc --noEmit"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.11",
+    "@mui/material": "^5.15.11",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
