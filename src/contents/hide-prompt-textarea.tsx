@@ -1,26 +1,27 @@
-import { useStorage } from "@plasmohq/storage/hook";
-import type { PlasmoCSConfig } from "plasmo";
-import { useEffect } from "react";
+import type { PlasmoCSConfig } from "plasmo"
+import { useEffect } from "react"
+
+import { useStorage } from "@plasmohq/storage/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ['https://chat.openai.com/*'],
-  all_frames: true,
+  matches: ["https://chat.openai.com/*"],
+  all_frames: true
 }
 
 const HidePromptTextarea = () => {
-  const [count] = useStorage("myCountKey"); 
+  const [count] = useStorage("myCountKey")
 
   useEffect(() => {
-    const n = 100 - count;
+    const n = 100 - count
     if (n <= 0) {
-      const textarea = document.getElementById("prompt-textarea");
+      const textarea = document.getElementById("prompt-textarea")
       if (textarea) {
-        textarea.style.display = 'none';
+        textarea.style.display = "none"
       }
     }
-  }, [count]); 
+  }, [count])
 
-  return null;
+  return null
 }
 
-export default HidePromptTextarea;
+export default HidePromptTextarea
