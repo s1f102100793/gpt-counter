@@ -1,11 +1,20 @@
+import styleText from "data-text:./styles/gugure-current-status.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import styles from "./styles/gugure-current-status.module.css"
+
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
   all_frames: true
+}
+
+export const getStyle = () => {
+  const styles = document.createElement("style")
+  styles.textContent = styleText
+  return styles
 }
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
@@ -21,7 +30,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 export const getShadowHostId = () => "gugure-anser"
 
 const GugureCurrentStatus = () => {
-  const [count] = useStorage("myCountKey")
+  const [count] = useStorage("myCountKey", 0)
   const n = 100 - count
 
   useEffect(() => {
@@ -35,12 +44,16 @@ const GugureCurrentStatus = () => {
   }, [count])
 
   return (
-    <div
-      style={{ position: "relative", backgroundColor: "black", width: "100%" }}>
-      <div style={{ position: "relative", width: "40rem" }}>
-        <div style={{ color: "white" }}>gugure</div>
-        <div style={{ color: "white" }}>残りの回数は{n}回です</div>
-      </div>
+    <div className={styles.statusContainer}>
+      {n > 0 ? (
+        <div className={styles.container}>
+          <div className={styles.content}>本日の残り回数は{n}回です。</div>
+        </div>
+      ) : (
+        <div className={styles.alertContainer}>
+          <div className={styles.content}>本日は使用できません</div>
+        </div>
+      )}
     </div>
   )
 }
