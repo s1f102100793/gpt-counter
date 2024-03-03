@@ -7,12 +7,22 @@ import {
   getLayoutSetting,
   savetLayoutSetting
 } from "src/utils/layoutSetting"
+import {
+  easyLimitSetting,
+  getLimitSetting,
+  hardLimitSetting,
+  normalLimitSetting,
+  savetLimitSetting,
+  type LimitSettingType
+} from "src/utils/limitSetting"
 
 import styles from "./index.module.css"
 
-function IndexPopup() {
+const Popup = () => {
   const [layoutSetting, setLayoutSetting] =
     useState<Record<string, boolean>>(defaultLayoutSetting)
+  const [limitSetting, setLimitSetting] =
+    useState<LimitSettingType>(normalLimitSetting)
 
   const handleOnclick = () => {
     alert("clicked")
@@ -23,15 +33,42 @@ function IndexPopup() {
     setLayoutSetting(updatedSetting)
     await savetLayoutSetting(updatedSetting)
   }
+  const handleDifficultyChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newDifficulty = event.target.value
+    let newSetting
+    switch (newDifficulty) {
+      case "easy":
+        newSetting = easyLimitSetting
+        break
+      case "normal":
+        newSetting = normalLimitSetting
+        break
+      case "hard":
+        newSetting = hardLimitSetting
+        break
+      default:
+        return
+    }
+    setLimitSetting(newSetting)
+    await savetLimitSetting(newSetting)
+  }
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutSetting(setting)
     })
   }
+  const fetchLimitSetting = async () => {
+    await getLimitSetting().then((setting) => {
+      setLimitSetting(setting)
+    })
+  }
 
   useEffect(() => {
     fetchLayoutSetting()
+    fetchLimitSetting()
   }, [])
 
   return (
@@ -42,12 +79,13 @@ function IndexPopup() {
       </div>
       <div className={styles.setting}>
         <div className={styles.settingHeader}>設定</div>
-        <select className={styles.select}>
-          <option value="option1">選択肢 1</option>
-          <option value="option2" selected>
-            選択肢 2
-          </option>
-          <option value="option3">選択肢 3</option>
+        <select
+          className={styles.select}
+          value={limitSetting.difficulty}
+          onChange={handleDifficultyChange}>
+          <option value="easy">イージー</option>
+          <option value="normal">ノーマル</option>
+          <option value="hard">ハード</option>
         </select>
       </div>
       {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
@@ -72,4 +110,4 @@ function IndexPopup() {
   )
 }
 
-export default IndexPopup
+export default Popup
