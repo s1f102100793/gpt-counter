@@ -4,9 +4,15 @@ const storage: Storage = new Storage()
 
 const getCurrentDateInJST = (): string => {
   const now = new Date()
-  const jstOffset = 9 * 60
-  now.setMinutes(now.getMinutes() + now.getTimezoneOffset() + jstOffset)
-  return now.toISOString().split("T")[0]
+  const formatter = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  })
+  const formattedDate = formatter.format(now).replace(/\//g, "-")
+  const [year, month, day] = formattedDate.split("-")
+  return `${year}-${month}-${day}`
 }
 
 const today = getCurrentDateInJST()
