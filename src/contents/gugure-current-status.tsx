@@ -3,6 +3,11 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
 import { gptAnserStoragekey } from "src/utils/dailyCount"
 import { getLayoutSetting } from "src/utils/layoutSetting"
+import {
+  getLimitSetting,
+  normalLimitSetting,
+  type LimitSettingType
+} from "src/utils/limitSetting"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -34,17 +39,23 @@ export const getShadowHostId = () => "gugure-anser"
 const GugureCurrentStatus = () => {
   const [count] = useStorage(gptAnserStoragekey, 0)
   const [isLayoutDisplay, setLayoutDisplay] = useState(false)
-  const n = 100 - count
+  const [limitSetting, setLimitSetting] =
+    useState<LimitSettingType>(normalLimitSetting)
+  const n = limitSetting.limit - count
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutDisplay(setting.displayAfterGptResponse)
     })
   }
+  const fetchLimitSetting = async () => {
+    await getLimitSetting().then((setting) => {
+      setLimitSetting(setting)
+    })
+  }
 
   useEffect(() => {
     const allElements = document.querySelectorAll("#gugure-anser")
-
     if (allElements.length > 1) {
       for (let i = 0; i < allElements.length - 1; i++) {
         allElements[i].remove()
@@ -54,10 +65,12 @@ const GugureCurrentStatus = () => {
 
   useEffect(() => {
     fetchLayoutSetting()
+    fetchLimitSetting()
   }, [])
 
   chrome.storage.onChanged.addListener(() => {
     fetchLayoutSetting()
+    fetchLimitSetting()
   })
 
   if (!isLayoutDisplay) return null
