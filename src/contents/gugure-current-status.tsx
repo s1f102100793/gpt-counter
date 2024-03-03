@@ -1,7 +1,8 @@
 import styleText from "data-text:./styles/gugure-current-status.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { gptAnserStoragekey } from "src/utils/dailyCount"
+import { getLayoutSetting } from "src/utils/layoutSetting"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -32,7 +33,14 @@ export const getShadowHostId = () => "gugure-anser"
 
 const GugureCurrentStatus = () => {
   const [count] = useStorage(gptAnserStoragekey, 0)
+  const [isLayoutDisplay, setLayoutDisplay] = useState(false)
   const n = 100 - count
+
+  const fetchLayoutSetting = async () => {
+    await getLayoutSetting().then((setting) => {
+      setLayoutDisplay(setting.displayAfterGptResponse)
+    })
+  }
 
   useEffect(() => {
     const allElements = document.querySelectorAll("#gugure-anser")
@@ -43,6 +51,16 @@ const GugureCurrentStatus = () => {
       }
     }
   }, [count])
+
+  useEffect(() => {
+    fetchLayoutSetting()
+  }, [])
+
+  chrome.storage.onChanged.addListener(() => {
+    fetchLayoutSetting()
+  })
+
+  if (!isLayoutDisplay) return null
 
   return (
     <div className={styles.statusContainer}>
