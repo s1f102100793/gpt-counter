@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
+import { gptAnserStoragekey } from "src/utils/dailyCount"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -9,7 +10,7 @@ export const config: PlasmoCSConfig = {
 }
 
 const HidePromptTextarea = () => {
-  const [count] = useStorage("myCountKey")
+  const [count] = useStorage(gptAnserStoragekey)
 
   useEffect(() => {
     const n = 100 - count

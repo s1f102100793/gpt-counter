@@ -1,6 +1,7 @@
 import styleText from "data-text:./styles/gugure-current-status.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect } from "react"
+import { gptAnserStoragekey } from "src/utils/dailyCount"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -30,7 +31,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 export const getShadowHostId = () => "gugure-anser"
 
 const GugureCurrentStatus = () => {
-  const [count] = useStorage("myCountKey", 0)
+  const [count] = useStorage(gptAnserStoragekey, 0)
   const n = 100 - count
 
   useEffect(() => {

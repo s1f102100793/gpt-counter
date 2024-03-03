@@ -1,8 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-
-import { Storage } from "@plasmohq/storage"
-
-const storage: Storage = new Storage()
+import { updateDailyCount } from "src/utils/dailyCount"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -32,11 +29,8 @@ const observeDOMChanges = async (): Promise<void> => {
         ".relative.flex.w-full.flex-col.agent-turn"
       ).length
       if (updateCount - currentCount === 1) {
-        console.log("ここで保存")
         currentCount = updateCount
-        const nowCount = (await storage.get("myCountKey")) as number
-        console.log("nowCount", nowCount)
-        await storage.set("myCountKey", nowCount + 1)
+        await updateDailyCount()
       }
     }
 
@@ -45,7 +39,6 @@ const observeDOMChanges = async (): Promise<void> => {
     }
     observer = new MutationObserver(mutationCallback)
     observer.observe(maxTarget, { childList: true, subtree: true })
-    console.log("Observing DOM changes...")
   } else {
     console.log("Target element not found.")
   }
