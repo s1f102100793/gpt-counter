@@ -51,6 +51,13 @@ const Popup = () => {
       default:
         return
     }
+    if (limitSetting.isLimitRemoved) {
+      newSetting = {
+        ...newSetting,
+        isLimitRemoved: true,
+        limit: Number.MAX_SAFE_INTEGER
+      }
+    }
     setLimitSetting(newSetting)
     await savetLimitSetting(newSetting)
   }

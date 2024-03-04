@@ -45,9 +45,13 @@ const ChatAreaCurrentStatus = () => {
   const remainingCounts = limitSetting.limit - count
 
   const removeLimit = async () => {
-    const newLimitSetting = { ...limitSetting, limit: Number.MAX_SAFE_INTEGER }
-    await savetLimitSetting(newLimitSetting)
-    setLimitSetting(newLimitSetting)
+    const unlimitedSetting = {
+      ...limitSetting,
+      isLimitRemoved: true,
+      limit: Number.MAX_SAFE_INTEGER
+    }
+    await savetLimitSetting(unlimitedSetting)
+    setLimitSetting(unlimitedSetting)
   }
 
   const fetchLayoutSetting = async () => {

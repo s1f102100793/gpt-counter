@@ -45,6 +45,7 @@ const HeaderCurrentStatus = () => {
     if (window.confirm("本日の制限を解除しますか？")) {
       const unlimitedSetting = {
         ...limitSetting,
+        isLimitRemoved: true,
         limit: Number.MAX_SAFE_INTEGER
       }
       setLimitSetting(unlimitedSetting)
