@@ -1,7 +1,6 @@
 .container {
   display: flex;
   width: 400px;
-  height: 600px;
   margin: -10px;
   flex-direction: column;
   border: solid 1px #dae1e8;
@@ -40,8 +39,11 @@
 
 .option {
   display: flex;
-  padding: 16px 32px;
+  padding: 8px 32px;
   justify-content: space-between;
+}
+
+.option:last-child {
   border-bottom: solid 1px #dae1e8;
 }
 
