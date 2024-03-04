@@ -28,7 +28,7 @@ export const hardLimitSetting: LimitSettingType = {
   isLimitRemoved: false
 } as const
 
-export const getLimitSetting = async () => {
+export const getLimitSetting = async (): Promise<LimitSettingType> => {
   const limitSetting = await storage.get(limitSettingKey)
   if (limitSetting === null || limitSetting === undefined)
     return normalLimitSetting
@@ -38,4 +38,19 @@ export const getLimitSetting = async () => {
 
 export const savetLimitSetting = async (setting: LimitSettingType) => {
   await storage.set(limitSettingKey, JSON.stringify(setting))
+}
+
+export const getLimitSettingByDifficulty = (
+  difficulty: string
+): LimitSettingType | undefined => {
+  switch (difficulty) {
+    case "easy":
+      return easyLimitSetting
+    case "normal":
+      return normalLimitSetting
+    case "hard":
+      return hardLimitSetting
+    default:
+      return undefined
+  }
 }

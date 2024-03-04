@@ -8,9 +8,8 @@ import {
   savetLayoutSetting
 } from "src/utils/layoutSetting"
 import {
-  easyLimitSetting,
   getLimitSetting,
-  hardLimitSetting,
+  getLimitSettingByDifficulty,
   normalLimitSetting,
   savetLimitSetting,
   type LimitSettingType
@@ -37,20 +36,8 @@ const Popup = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newDifficulty = event.target.value
-    let newSetting
-    switch (newDifficulty) {
-      case "easy":
-        newSetting = easyLimitSetting
-        break
-      case "normal":
-        newSetting = normalLimitSetting
-        break
-      case "hard":
-        newSetting = hardLimitSetting
-        break
-      default:
-        return
-    }
+    let newSetting = getLimitSettingByDifficulty(newDifficulty)
+    if (newSetting === undefined) return
     if (limitSetting.isLimitRemoved) {
       newSetting = {
         ...newSetting,
