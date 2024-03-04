@@ -1,48 +1,77 @@
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { Box, CssBaseline, Drawer, Toolbar, Typography } from "@mui/material"
+import { useState } from "react"
+import CustomDrawer from "src/components/CustomDrawer"
 
-import { useStorage } from "@plasmohq/storage/hook"
+const drawerWidth = 240
 
 function OptionsIndex() {
-  const [name, setName] = useStorage("name")
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState("statistics")
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<{ name: string }>()
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
+  }
 
-  const onSubmit: SubmitHandler<{ name: string }> = (data) => {
-    setName(data.name)
+  const handleSelectItem = (value: string) => {
+    setSelectedItem(value)
+  }
+
+  const renderContent = () => {
+    switch (selectedItem) {
+      case "statistics":
+        return <Typography>統計の内容</Typography>
+      case "general":
+        return <Typography>全般の内容</Typography>
+      default:
+        return <Typography>選択された項目がありません</Typography>
+    }
   }
 
   return (
-    <div>
-      <h1>This is the Option UI page!</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          Name:
-          <input
-            {...register("name", {
-              required: "This is required"
-            })}
-            defaultValue={name}
-            style={{
-              border: errors.name ? "1px solid red" : "1px solid black"
-            }}
-          />
-        </label>
-        {errors.name && <p style={{ color: "red" }}>{errors.name.message}</p>}
-
-        <button
-          type="submit"
-          style={{
-            marginTop: "20px",
-            display: "block"
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders">
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth
+            }
           }}>
-          Save
-        </button>
-      </form>
-    </div>
+          <CustomDrawer onSelect={handleSelectItem} />
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth
+            }
+          }}
+          open>
+          <CustomDrawer onSelect={handleSelectItem} />
+        </Drawer>
+      </Box>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` }
+        }}>
+        <Toolbar />
+        {renderContent()}
+      </Box>
+    </Box>
   )
 }
 
