@@ -46,7 +46,10 @@ function OptionsIndex() {
               width: drawerWidth
             }
           }}>
-          <CustomDrawer onSelect={handleSelectItem} />
+          <CustomDrawer
+            onSelect={handleSelectItem}
+            selectedValue={selectedItem}
+          />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -58,7 +61,10 @@ function OptionsIndex() {
             }
           }}
           open>
-          <CustomDrawer onSelect={handleSelectItem} />
+          <CustomDrawer
+            onSelect={handleSelectItem}
+            selectedValue={selectedItem}
+          />
         </Drawer>
       </Box>
       <Box

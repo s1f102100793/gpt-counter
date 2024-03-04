@@ -12,22 +12,30 @@ import {
 
 interface CustomDrawerProps {
   onSelect: (value: string) => void
+  selectedValue: string
 }
 
-const CustomDrawer = ({ onSelect }: CustomDrawerProps) => {
+const CustomDrawer = ({ onSelect, selectedValue }: CustomDrawerProps) => {
   const navItems = [
     { text: "統計", Icon: TimelineIcon, value: "statistics" },
     { text: "全般", Icon: SettingsIcon, value: "general" }
   ]
 
   return (
-    <div>
+    <div style={{ backgroundColor: "#f1f1f1", minHeight: "100vh" }}>
       <Toolbar />
-      <Divider />
       <List>
         {navItems.map(({ text, Icon, value }) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => onSelect(value)}>
+            <ListItemButton
+              onClick={() => onSelect(value)}
+              sx={{
+                backgroundColor:
+                  value === selectedValue ? "#ffffff" : "inherit",
+                "&:hover": {
+                  backgroundColor: value === selectedValue ? "#ffffff" : ""
+                }
+              }}>
               <ListItemIcon>
                 <Icon />
               </ListItemIcon>
