@@ -13,13 +13,13 @@ export const config: PlasmoCSConfig = {
 const HidePromptTextarea = () => {
   const [count] = useStorage(gptAnserStoragekey)
   const [limit, serLimit] = useState(normalLimitSetting.limit)
+  const [url, setUrl] = useState("")
 
   const fetchLimitSetting = async () => {
     await getLimitSetting().then((setting) => {
       serLimit(setting.limit)
     })
   }
-
   useEffect(() => {
     fetchLimitSetting()
   }, [])
@@ -27,21 +27,24 @@ const HidePromptTextarea = () => {
   chrome.storage.onChanged.addListener(() => {
     fetchLimitSetting()
   })
-
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.name === "url") {
+      setUrl(message.body.url)
+    }
+  })
+  
   useEffect(() => {
     const n = limit - count
-    if (n <= 0) {
+    setTimeout(() => {
       const textarea = document.getElementById("prompt-textarea")
-      if (textarea) {
-        textarea.style.display = "none"
+      if (!textarea) return
+      if (n <= 0) {
+        textarea.style.setProperty("display", "none", "important")
+      } else {
+        textarea.style.setProperty("display", "block", "important")
       }
-    } else {
-      const textarea = document.getElementById("prompt-textarea")
-      if (textarea) {
-        textarea.style.display = "block"
-      }
-    }
-  }, [count, limit])
+    }, 100)
+  }, [count, limit, url])
 
   return null
 }
