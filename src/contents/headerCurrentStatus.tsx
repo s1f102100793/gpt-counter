@@ -1,7 +1,7 @@
-import styleText from "data-text:./styles/header-current-status.module.css"
+import styleText from "data-text:./styles/headerCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
-import { gptAnserStoragekey } from "src/utils/dailyCount"
+import { gptResponseStoragekey } from "src/utils/dailyCount"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -11,7 +11,7 @@ import {
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import styles from "./styles/header-current-status.module.css"
+import styles from "./styles/headerCurrentStatus.module.css"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -34,11 +34,11 @@ export const getStyle = () => {
 export const getShadowHostId = () => "header-current-status"
 
 const HeaderCurrentStatus = () => {
-  const [count] = useStorage(gptAnserStoragekey, 0)
+  const [count] = useStorage(gptResponseStoragekey, 0)
   const [isLayoutDisplay, setLayoutDisplay] = useState(false)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
-  const n = limitSetting.limit - count
+  const remainingCounts = limitSetting.limit - count
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
@@ -65,7 +65,9 @@ const HeaderCurrentStatus = () => {
 
   return (
     <div className={styles.container}>
-      {n > 0 ? `本日の残り回数は${n}回です。` : "本日は使用できません"}
+      {remainingCounts > 0
+        ? `本日の残り回数は${remainingCounts}回です。`
+        : "本日は使用できません"}
     </div>
   )
 }

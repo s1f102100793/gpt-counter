@@ -17,10 +17,10 @@ const getCurrentDateInJST = (): string => {
 
 const today = getCurrentDateInJST()
 
-export const gptAnserStoragekey = `gptAnser-${today}`
+export const gptResponseStoragekey = `gptResponse-${today}`
 
 export const updateDailyCount = async () => {
-  const currentCount = ((await storage.get(gptAnserStoragekey)) as number) || 0
-  await storage.set(gptAnserStoragekey, currentCount + 1)
-  console.log(`Count for ${today}:`, currentCount + 1)
+  const currentCount =
+    ((await storage.get(gptResponseStoragekey)) as number) || 0
+  await storage.set(gptResponseStoragekey, currentCount + 1)
 }

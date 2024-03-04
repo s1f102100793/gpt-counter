@@ -1,7 +1,7 @@
-import styleText from "data-text:./styles/gugure-current-status.module.css"
+import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
-import { gptAnserStoragekey } from "src/utils/dailyCount"
+import { gptResponseStoragekey } from "src/utils/dailyCount"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -11,7 +11,7 @@ import {
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import styles from "./styles/gugure-current-status.module.css"
+import styles from "./styles/chatAreaCurrentStatus.module.css"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -34,14 +34,14 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
   return parentElements[parentElements.length - 1] as Element
 }
 
-export const getShadowHostId = () => "gugure-anser"
+export const getShadowHostId = () => "chatarea-current-status"
 
-const GugureCurrentStatus = () => {
-  const [count] = useStorage(gptAnserStoragekey, 0)
+const ChatAreaCurrentStatus = () => {
+  const [count] = useStorage(gptResponseStoragekey, 0)
   const [isLayoutDisplay, setLayoutDisplay] = useState(false)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
-  const n = limitSetting.limit - count
+  const remainingCounts = limitSetting.limit - count
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
@@ -55,7 +55,7 @@ const GugureCurrentStatus = () => {
   }
 
   useEffect(() => {
-    const allElements = document.querySelectorAll("#gugure-anser")
+    const allElements = document.querySelectorAll("#chatarea-current-status")
     if (allElements.length > 1) {
       for (let i = 0; i < allElements.length - 1; i++) {
         allElements[i].remove()
@@ -77,9 +77,11 @@ const GugureCurrentStatus = () => {
 
   return (
     <div className={styles.statusContainer}>
-      {n > 0 ? (
+      {remainingCounts > 0 ? (
         <div className={styles.container}>
-          <div className={styles.content}>本日の残り回数は{n}回です。</div>
+          <div className={styles.content}>
+            本日の残り回数は{remainingCounts}回です。
+          </div>
         </div>
       ) : (
         <div className={styles.alertContainer}>
@@ -90,4 +92,4 @@ const GugureCurrentStatus = () => {
   )
 }
 
-export default GugureCurrentStatus
+export default ChatAreaCurrentStatus

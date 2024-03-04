@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-import { gptAnserStoragekey } from "src/utils/dailyCount"
+import { gptResponseStoragekey } from "src/utils/dailyCount"
 import { getLimitSetting, normalLimitSetting } from "src/utils/limitSetting"
 
 import { useStorage } from "@plasmohq/storage/hook"
@@ -11,7 +11,7 @@ export const config: PlasmoCSConfig = {
 }
 
 const HidePromptTextarea = () => {
-  const [count] = useStorage(gptAnserStoragekey)
+  const [count] = useStorage(gptResponseStoragekey)
   const [limit, serLimit] = useState(normalLimitSetting.limit)
   const [url, setUrl] = useState("")
 
@@ -32,13 +32,13 @@ const HidePromptTextarea = () => {
       setUrl(message.body.url)
     }
   })
-  
+
   useEffect(() => {
-    const n = limit - count
+    const remainingCounts = limit - count
     setTimeout(() => {
       const textarea = document.getElementById("prompt-textarea")
       if (!textarea) return
-      if (n <= 0) {
+      if (remainingCounts <= 0) {
         textarea.style.setProperty("display", "none", "important")
       } else {
         textarea.style.setProperty("display", "block", "important")
