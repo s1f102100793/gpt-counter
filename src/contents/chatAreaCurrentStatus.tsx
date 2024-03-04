@@ -6,6 +6,7 @@ import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
   normalLimitSetting,
+  savetLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -42,6 +43,12 @@ const ChatAreaCurrentStatus = () => {
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
   const remainingCounts = limitSetting.limit - count
+
+  const removeLimit = async () => {
+    const newLimitSetting = { ...limitSetting, limit: Number.MAX_SAFE_INTEGER }
+    await savetLimitSetting(newLimitSetting)
+    setLimitSetting(newLimitSetting)
+  }
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
@@ -86,6 +93,9 @@ const ChatAreaCurrentStatus = () => {
       ) : (
         <div className={styles.alertContainer}>
           <div className={styles.content}>本日は使用できません</div>
+          <button onClick={removeLimit} className={styles.removeLimitButton}>
+            今日は制限を無くす。
+          </button>
         </div>
       )}
     </div>
