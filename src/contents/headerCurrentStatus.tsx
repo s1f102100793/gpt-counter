@@ -6,6 +6,7 @@ import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
   normalLimitSetting,
+  savetLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -40,6 +41,17 @@ const HeaderCurrentStatus = () => {
     useState<LimitSettingType>(normalLimitSetting)
   const remainingCounts = limitSetting.limit - count
 
+  const removeLimit = async () => {
+    if (window.confirm("本日の制限を解除しますか？")) {
+      const unlimitedSetting = {
+        ...limitSetting,
+        limit: Number.MAX_SAFE_INTEGER
+      }
+      setLimitSetting(unlimitedSetting)
+      await savetLimitSetting(unlimitedSetting)
+    }
+  }
+
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutDisplay(setting.header)
@@ -65,9 +77,13 @@ const HeaderCurrentStatus = () => {
 
   return (
     <div className={styles.container}>
-      {remainingCounts > 0
-        ? `本日の残り回数は${remainingCounts}回です。`
-        : "本日は使用できません"}
+      {remainingCounts > 0 ? (
+        `本日の残り回数は${remainingCounts}回です。`
+      ) : (
+        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
+          本日は使用できません
+        </div>
+      )}
     </div>
   )
 }
