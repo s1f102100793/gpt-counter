@@ -19,7 +19,11 @@
   font-weight: bold;
 }
 
-.setting {
+.settingIcon {
+  cursor: pointer;
+}
+
+.limitSetting {
   display: flex;
   flex-direction: column;
   padding: 16px 32px;
@@ -33,21 +37,22 @@
   font-weight: bold;
 }
 
-.select {
+.limitSelect {
   padding: 8px;
+  cursor: pointer;
 }
 
-.option {
+.layoutOption {
   display: flex;
   padding: 8px 32px;
   justify-content: space-between;
 }
 
-.option:last-child {
+.layoutOption:last-child {
   border-bottom: solid 1px #dae1e8;
 }
 
-.optionLabel {
+.layoutOptionLabel {
   display: flex;
   font-size: 16px;
   justify-content: center;

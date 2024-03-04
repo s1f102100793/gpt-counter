@@ -23,8 +23,8 @@ const Popup = () => {
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
 
-  const handleOnclick = () => {
-    alert("clicked")
+  const navigateToSettings = () => {
+    chrome.runtime.openOptionsPage()
   }
 
   const handleSwitchChange = async (settingName: string, checked: boolean) => {
@@ -69,12 +69,15 @@ const Popup = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.appName}>Gugure</div>
-        <SettingsOutlinedIcon onClick={handleOnclick} />
+        <SettingsOutlinedIcon
+          className={styles.settingIcon}
+          onClick={navigateToSettings}
+        />
       </div>
-      <div className={styles.setting}>
+      <div className={styles.limitSetting}>
         <div className={styles.settingHeader}>設定</div>
         <select
-          className={styles.select}
+          className={styles.limitSelect}
           value={limitSetting.difficulty}
           onChange={handleDifficultyChange}>
           <option value="easy">イージー</option>
@@ -83,8 +86,8 @@ const Popup = () => {
         </select>
       </div>
       {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
-        <div key={settingName} className={styles.option}>
-          <p className={styles.optionLabel}>{settingName}</p>
+        <div key={settingName} className={styles.layoutOption}>
+          <p className={styles.layoutOptionLabel}>{settingName}</p>
           <FormControlLabel
             control={
               <IOSSwitch
