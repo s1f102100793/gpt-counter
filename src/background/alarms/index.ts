@@ -1,11 +1,18 @@
 import {
+  getCurrentDateInJST,
+  gptResponsesStorageKey
+} from "src/utils/dailyCount"
+import {
   getLimitSetting,
   getLimitSettingByDifficulty,
   savetLimitSetting
 } from "src/utils/limitSetting"
 
-chrome.runtime.onInstalled.addListener(() => {
+const storage: Storage = new Storage()
+
+chrome.runtime.onInstalled.addListener(async () => {
   setDailyResetAlarm()
+  await initializeDailyCountStorage()
 })
 
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -32,4 +39,14 @@ const resetLimitSetting = async () => {
   if (defaultSetting === undefined) return
 
   await savetLimitSetting(defaultSetting)
+}
+
+const initializeDailyCountStorage = async () => {
+  const today = getCurrentDateInJST()
+  const initialData = { [today]: 0 }
+
+  const existingData = await storage.get(gptResponsesStorageKey)
+  if (existingData === null || existingData === undefined) {
+    await storage.set(gptResponsesStorageKey, initialData)
+  }
 }

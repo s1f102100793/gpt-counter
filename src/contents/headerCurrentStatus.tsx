@@ -1,7 +1,7 @@
 import styleText from "data-text:./styles/headerCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
-import { gptResponseStoragekey } from "src/utils/dailyCount"
+import { getDailyCount } from "src/utils/dailyCount"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -9,8 +9,6 @@ import {
   savetLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
-
-import { useStorage } from "@plasmohq/storage/hook"
 
 import styles from "./styles/headerCurrentStatus.module.css"
 
@@ -35,7 +33,7 @@ export const getStyle = () => {
 export const getShadowHostId = () => "header-current-status"
 
 const HeaderCurrentStatus = () => {
-  const [count] = useStorage(gptResponseStoragekey, 0)
+  const [count, setCount] = useState(0)
   const [isLayoutDisplay, setLayoutDisplay] = useState(false)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
@@ -53,6 +51,11 @@ const HeaderCurrentStatus = () => {
     }
   }
 
+  const fetchTodayCount = async () => {
+    await getDailyCount().then((count) => {
+      setCount(count)
+    })
+  }
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutDisplay(setting.header)
@@ -65,11 +68,13 @@ const HeaderCurrentStatus = () => {
   }
 
   useEffect(() => {
+    fetchTodayCount()
     fetchLayoutSetting()
     fetchLimitSetting()
   }, [])
 
   chrome.storage.onChanged.addListener(() => {
+    fetchTodayCount()
     fetchLayoutSetting()
     fetchLimitSetting()
   })

@@ -1,9 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-import { gptResponseStoragekey } from "src/utils/dailyCount"
+import { getDailyCount } from "src/utils/dailyCount"
 import { getLimitSetting, normalLimitSetting } from "src/utils/limitSetting"
-
-import { useStorage } from "@plasmohq/storage/hook"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -11,20 +9,27 @@ export const config: PlasmoCSConfig = {
 }
 
 const HidePromptTextarea = () => {
-  const [count] = useStorage(gptResponseStoragekey)
+  const [count, setCount] = useState(0)
   const [limit, serLimit] = useState(normalLimitSetting.limit)
   const [url, setUrl] = useState("")
 
+  const fetchTodayCount = async () => {
+    await getDailyCount().then((count) => {
+      setCount(count)
+    })
+  }
   const fetchLimitSetting = async () => {
     await getLimitSetting().then((setting) => {
       serLimit(setting.limit)
     })
   }
   useEffect(() => {
+    fetchTodayCount()
     fetchLimitSetting()
   }, [])
 
   chrome.storage.onChanged.addListener(() => {
+    fetchTodayCount()
     fetchLimitSetting()
   })
   chrome.runtime.onMessage.addListener((message) => {

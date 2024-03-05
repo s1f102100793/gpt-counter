@@ -1,7 +1,7 @@
 import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
-import { gptResponseStoragekey } from "src/utils/dailyCount"
+import { getDailyCount } from "src/utils/dailyCount"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -9,8 +9,6 @@ import {
   savetLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
-
-import { useStorage } from "@plasmohq/storage/hook"
 
 import styles from "./styles/chatAreaCurrentStatus.module.css"
 
@@ -38,7 +36,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 export const getShadowHostId = () => "chatarea-current-status"
 
 const ChatAreaCurrentStatus = () => {
-  const [count] = useStorage(gptResponseStoragekey, 0)
+  const [count, setCount] = useState(0)
   const [isLayoutDisplay, setLayoutDisplay] = useState(false)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
@@ -53,7 +51,11 @@ const ChatAreaCurrentStatus = () => {
     await savetLimitSetting(unlimitedSetting)
     setLimitSetting(unlimitedSetting)
   }
-
+  const fetchTodayCount = async () => {
+    await getDailyCount().then((count) => {
+      setCount(count)
+    })
+  }
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutDisplay(setting.displayAfterGptResponse)
@@ -75,11 +77,13 @@ const ChatAreaCurrentStatus = () => {
   }, [count])
 
   useEffect(() => {
+    fetchTodayCount()
     fetchLayoutSetting()
     fetchLimitSetting()
   }, [])
 
   chrome.storage.onChanged.addListener(() => {
+    fetchTodayCount()
     fetchLayoutSetting()
     fetchLimitSetting()
   })
