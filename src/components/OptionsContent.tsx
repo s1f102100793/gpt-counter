@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 
-import OptionsLayoutSetting from "./OptionSetting/OptionsLayoutSetting"
-import OptionsLimitSetting from "./OptionSetting/OptionsLimitSetting"
+import OptionsLayoutSetting from "./OptionSetting/Layout/OptionsLayoutSetting"
+import OptionsLimitSetting from "./OptionSetting/Limit/OptionsLimitSetting"
 
 interface OptionsContentProps {
   selectedItem: string
