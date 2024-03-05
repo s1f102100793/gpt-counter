@@ -6,7 +6,7 @@ import {
   savetLayoutSetting
 } from "src/utils/layoutSetting"
 
-import { IOSSwitch } from "../IosSwitch"
+import { IOSSwitch } from "../mui/IosSwitch"
 import styles from "./OptionlayoutSetting.module.css"
 
 const OptionsLayoutSetting = () => {

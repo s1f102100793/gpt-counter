@@ -1,7 +1,7 @@
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined"
 import { FormControlLabel } from "@mui/material"
 import { useEffect, useState } from "react"
-import { IOSSwitch } from "src/components/IosSwitch"
+import { IOSSwitch } from "src/components/mui/IosSwitch"
 import {
   defaultLayoutSetting,
   getLayoutSetting,
