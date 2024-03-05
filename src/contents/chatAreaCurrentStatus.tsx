@@ -58,7 +58,7 @@ const ChatAreaCurrentStatus = () => {
   }
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
-      setLayoutDisplay(setting.displayAfterGptResponse)
+      setLayoutDisplay(setting.afterGptResponse)
     })
   }
   const fetchLimitSetting = async () => {

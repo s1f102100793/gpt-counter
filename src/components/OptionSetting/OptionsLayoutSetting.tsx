@@ -12,6 +12,14 @@ const OptionsLayoutSetting = () => {
   const [layoutSetting, setLayoutSetting] =
     useState<Record<string, boolean>>(defaultLayoutSetting)
 
+  const translateSettingName = (settingName: string): string => {
+    const nameMap: Record<string, string> = {
+      afterGptResponse: "GPTレスポンス後に残り回数を表示をする。",
+      header: "ヘッダーに表示に残り回数を表示する。"
+    }
+    return nameMap[settingName] || settingName
+  }
+
   const handleSwitchChange = async (settingName: string, checked: boolean) => {
     const updatedSetting = { ...layoutSetting, [settingName]: checked }
     setLayoutSetting(updatedSetting)
@@ -23,7 +31,9 @@ const OptionsLayoutSetting = () => {
       <div>
         {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
           <div key={settingName} className={styles.content}>
-            <p className={styles.contentLabel}>{settingName}</p>
+            <p className={styles.contentLabel}>
+              {translateSettingName(settingName)}
+            </p>
             <FormControlLabel
               control={
                 <IOSSwitch

@@ -5,7 +5,7 @@ const storage: Storage = new Storage()
 export const layoutSettingKey = "layoutSetting"
 
 export const defaultLayoutSetting: Record<string, boolean> = {
-  displayAfterGptResponse: true,
+  afterGptResponse: true,
   header: true
 } as const
 

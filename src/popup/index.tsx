@@ -23,6 +23,14 @@ const Popup = () => {
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
 
+  const translateSettingName = (settingName: string): string => {
+    const nameMap: Record<string, string> = {
+      afterGptResponse: "GPTレスポンス後に表示",
+      header: "ヘッダーに表示"
+    }
+    return nameMap[settingName] || settingName
+  }
+
   const navigateToSettings = () => {
     chrome.runtime.openOptionsPage()
   }
@@ -87,7 +95,9 @@ const Popup = () => {
       </div>
       {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
         <div key={settingName} className={styles.layoutOption}>
-          <p className={styles.layoutOptionLabel}>{settingName}</p>
+          <p className={styles.layoutOptionLabel}>
+            {translateSettingName(settingName)}
+          </p>
           <FormControlLabel
             control={
               <IOSSwitch
