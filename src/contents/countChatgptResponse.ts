@@ -8,31 +8,33 @@ export const config: PlasmoCSConfig = {
 
 let observer: MutationObserver | null = null
 
+const gptResponseParentElements = document.querySelector(
+  ".flex-1.overflow-hidden"
+)
+const gptResponseClassName = ".relative.flex.w-full.flex-col.agent-turn"
+const gptModelClassName = ".group .text-token-text-secondary"
+
 const countDefaultElements = (): Promise<number> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const elements = document.querySelectorAll(
-        ".relative.flex.w-full.flex-col.agent-turn"
-      )
-      resolve(elements.length)
+      const gptResponseElements =
+        document.querySelectorAll(gptResponseClassName)
+      resolve(gptResponseElements.length)
     }, 1000)
   })
 }
 
 const observeDOMChanges = async (): Promise<void> => {
-  const maxTarget = document.querySelector(".flex-1.overflow-hidden")
-  if (maxTarget) {
+  if (gptResponseParentElements) {
     let currentCount = await countDefaultElements()
-
     const mutationCallback: MutationCallback = async () => {
-      const updateCount = maxTarget.querySelectorAll(
-        ".relative.flex.w-full.flex-col.agent-turn"
-      ).length
+      const gptResponseElements =
+        document.querySelectorAll(gptResponseClassName)
+      const updateCount = gptResponseElements.length
+
       if (updateCount - currentCount === 1) {
         currentCount = updateCount
-        const gptModel = document.querySelector(
-          ".group .text-token-text-secondary"
-        )?.textContent
+        const gptModel = document.querySelector(gptModelClassName)?.textContent
         if (gptModel === undefined || gptModel === null) {
           console.error("GPT model not found.")
         } else {
@@ -44,10 +46,14 @@ const observeDOMChanges = async (): Promise<void> => {
     if (observer) {
       observer.disconnect()
     }
+
     observer = new MutationObserver(mutationCallback)
-    observer.observe(maxTarget, { childList: true, subtree: true })
+    observer.observe(gptResponseParentElements, {
+      childList: true,
+      subtree: true
+    })
   } else {
-    console.log("Target element not found.")
+    console.error("Target element not found.")
   }
 }
 
