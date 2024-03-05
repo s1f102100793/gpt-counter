@@ -72,6 +72,10 @@ const Popup = () => {
     fetchLayoutSetting()
     fetchLimitSetting()
   }, [])
+  chrome.storage.onChanged.addListener(() => {
+    fetchLayoutSetting()
+    fetchLimitSetting()
+  })
 
   return (
     <div className={styles.container}>

@@ -1,7 +1,8 @@
 import { FormControlLabel } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   defaultLayoutSetting,
+  getLayoutSetting,
   savetLayoutSetting
 } from "src/utils/layoutSetting"
 
@@ -25,6 +26,19 @@ const OptionsLayoutSetting = () => {
     setLayoutSetting(updatedSetting)
     await savetLayoutSetting(updatedSetting)
   }
+
+  const fetchLayoutSetting = async () => {
+    await getLayoutSetting().then((setting) => {
+      setLayoutSetting(setting)
+    })
+  }
+  useEffect(() => {
+    fetchLayoutSetting()
+  }, [])
+  chrome.storage.onChanged.addListener(() => {
+    fetchLayoutSetting()
+  })
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>レイアウト設定</div>
