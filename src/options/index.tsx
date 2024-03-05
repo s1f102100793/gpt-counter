@@ -1,6 +1,7 @@
-import { Box, CssBaseline, Drawer, Toolbar, Typography } from "@mui/material"
+import { Box, CssBaseline, Drawer, Toolbar } from "@mui/material"
 import { useState } from "react"
 import CustomDrawer from "src/components/CustomDrawer"
+import OptionsContent from "src/components/OptionsContent"
 
 const drawerWidth = 240
 
@@ -14,17 +15,6 @@ function OptionsIndex() {
 
   const handleSelectItem = (value: string) => {
     setSelectedItem(value)
-  }
-
-  const renderContent = () => {
-    switch (selectedItem) {
-      case "statistics":
-        return <Typography>統計の内容</Typography>
-      case "general":
-        return <Typography>全般の内容</Typography>
-      default:
-        return <Typography>選択された項目がありません</Typography>
-    }
   }
 
   return (
@@ -75,7 +65,7 @@ function OptionsIndex() {
           width: { sm: `calc(100% - ${drawerWidth}px)` }
         }}>
         <Toolbar />
-        {renderContent()}
+        <OptionsContent selectedItem={selectedItem} />
       </Box>
     </Box>
   )

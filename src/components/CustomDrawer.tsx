@@ -1,7 +1,6 @@
 import SettingsIcon from "@mui/icons-material/Settings"
 import TimelineIcon from "@mui/icons-material/Timeline"
 import {
-  Divider,
   List,
   ListItem,
   ListItemButton,
