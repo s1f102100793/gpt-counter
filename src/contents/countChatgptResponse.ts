@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { updateDailyCount } from "src/utils/dailyCount"
+import { updateEventCount } from "src/utils/dailyCount"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -30,7 +30,14 @@ const observeDOMChanges = async (): Promise<void> => {
       ).length
       if (updateCount - currentCount === 1) {
         currentCount = updateCount
-        await updateDailyCount()
+        const gptModel = document.querySelector(
+          ".group .text-token-text-secondary"
+        )?.textContent
+        if (gptModel === undefined || gptModel === null) {
+          console.error("GPT model not found.")
+        } else {
+          await updateEventCount(gptModel)
+        }
       }
     }
 
