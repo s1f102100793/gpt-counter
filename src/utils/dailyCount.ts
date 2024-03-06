@@ -51,3 +51,13 @@ export const getDailyCount = async (date?: string): Promise<number> => {
 
   return totalDailyCount
 }
+
+export const getCountData = async (): Promise<
+  Record<string, Record<string, number>>
+> => {
+  const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
+  const allCounts =
+    (storageResult as Record<string, Record<string, number>>) ?? {}
+
+  return allCounts
+}

@@ -2,6 +2,7 @@ import { Typography } from "@mui/material"
 
 import OptionsLayoutSetting from "./OptionSetting/Layout/OptionsLayoutSetting"
 import OptionsLimitSetting from "./OptionSetting/Limit/OptionsLimitSetting"
+import OptionStatistics from "./OptionStatistics/OptionStatistics"
 
 interface OptionsContentProps {
   selectedItem: string
@@ -11,7 +12,9 @@ const OptionsContent = ({ selectedItem }: OptionsContentProps) => {
   return (
     <div>
       {selectedItem === "statistics" ? (
-        <Typography>統計の内容</Typography>
+        <Typography>
+          <OptionStatistics />
+        </Typography>
       ) : selectedItem === "general" ? (
         <Typography>
           <OptionsLimitSetting />
