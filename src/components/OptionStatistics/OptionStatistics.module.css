@@ -9,6 +9,10 @@
   gap: 16px;
 }
 
+.controls {
+  display: flex;
+}
+
 .title {
   display: flex;
   font-size: 24px;
