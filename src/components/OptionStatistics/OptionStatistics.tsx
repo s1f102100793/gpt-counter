@@ -8,7 +8,8 @@ import {
   PointElement,
   Title,
   Tooltip,
-  type ChartData
+  type ChartData,
+  type ChartOptions
 } from "chart.js"
 import {
   addMonths,
@@ -17,12 +18,12 @@ import {
   format,
   isAfter,
   isBefore,
-  parseISO,
   startOfMonth
 } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { Line } from "react-chartjs-2"
 import { getCountData } from "src/utils/dailyCount"
+import { findOldestDataMonth } from "src/utils/date-fns"
 
 import styles from "./OptionStatistics.module.css"
 
@@ -43,11 +44,15 @@ const OptionStatistics = () => {
     labels: [],
     datasets: []
   })
-  const [options, setOptions] = useState({
+  const [options, setOptions] = useState<ChartOptions<"line">>({
     plugins: {
       title: {
         display: true,
-        text: format(currentDate, "yyyy年MM月")
+        text: format(currentDate, "     yyyy年MM月"),
+        font: {
+          size: 24
+        },
+        align: "start"
       }
     },
     scales: {
@@ -63,20 +68,6 @@ const OptionStatistics = () => {
       }
     }
   })
-
-  const findOldestDataMonth = async () => {
-    const allCounts = await getCountData()
-    let oldestDate = new Date()
-
-    Object.keys(allCounts).forEach((dateStr) => {
-      const date = parseISO(dateStr)
-      if (isBefore(date, oldestDate)) {
-        oldestDate = date
-      }
-    })
-
-    return startOfMonth(oldestDate)
-  }
 
   const updateChartData = async (date: Date) => {
     const allCounts = await getCountData()
@@ -124,8 +115,8 @@ const OptionStatistics = () => {
       plugins: {
         ...currentOptions.plugins,
         title: {
-          ...currentOptions.plugins.title,
-          text: format(currentDate, "yyyy年MM月")
+          ...currentOptions.plugins?.title,
+          text: format(currentDate, "     yyyy年MM月")
         }
       }
     }))
@@ -155,10 +146,16 @@ const OptionStatistics = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>統計ダッシュボード</div>
-      <div className={styles.controls}>
-        <button onClick={handlePrevMonth}>前の月</button>
-        <button onClick={handleNextMonth}>次の月</button>
+      <div className={styles.header}>
+        <div className={styles.title}>統計ダッシュボード</div>
+        <div className={styles.controls}>
+          <button className={styles.changeButton} onClick={handlePrevMonth}>
+            prev
+          </button>
+          <button className={styles.changeButton} onClick={handleNextMonth}>
+            next
+          </button>
+        </div>
       </div>
       <div className={styles.content}>
         <Line data={data} options={options} />

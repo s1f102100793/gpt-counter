@@ -9,15 +9,41 @@
   gap: 16px;
 }
 
-.controls {
+.header {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 800px;
+  height: 100%;
+  border-bottom: 2px solid #e0e0e0;
 }
 
 .title {
   display: flex;
   font-size: 24px;
   font-weight: bold;
+  align-items: center;
+  padding-left: 8px;
   width: 800px;
+}
+
+.controls {
+  display: flex;
+  padding: 8px;
+  gap: 8px;
+}
+
+.changeButton {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.changeButton:hover {
+  background-color: #e0e0e0;
 }
 
 .content {
