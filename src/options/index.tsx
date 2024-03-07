@@ -1,5 +1,5 @@
 import { Box, CssBaseline, Drawer, Toolbar } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CustomDrawer from "src/components/CustomDrawer"
 import OptionsContent from "src/components/OptionsContent"
 
@@ -16,6 +16,10 @@ function OptionsIndex() {
   const handleSelectItem = (value: string) => {
     setSelectedItem(value)
   }
+
+  useEffect(() => {
+    window.location.hash = `#${selectedItem}`
+  }, [selectedItem])
 
   return (
     <Box sx={{ display: "flex" }}>
