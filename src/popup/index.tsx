@@ -99,9 +99,9 @@ const Popup = () => {
       </div>
       {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
         <div key={settingName} className={styles.layoutOption}>
-          <p className={styles.layoutOptionLabel}>
+          <div className={styles.layoutOptionLabel}>
             {translateSettingName(settingName)}
-          </p>
+          </div>
           <FormControlLabel
             control={
               <IOSSwitch

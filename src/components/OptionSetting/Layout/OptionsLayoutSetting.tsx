@@ -45,9 +45,9 @@ const OptionsLayoutSetting = () => {
       <div>
         {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
           <div key={settingName} className={styles.content}>
-            <p className={styles.contentLabel}>
+            <div className={styles.contentLabel}>
               {translateSettingName(settingName)}
-            </p>
+            </div>
             <FormControlLabel
               control={
                 <IOSSwitch
