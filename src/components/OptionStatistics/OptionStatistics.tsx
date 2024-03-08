@@ -37,6 +37,36 @@ ChartJS.register(
   Legend,
   Filler
 )
+const calculateMonthlyStatistics = (
+  allCounts: Record<string, Record<string, number>>,
+  targetMonth: Date
+) => {
+  const startOfTargetMonth = startOfMonth(targetMonth)
+  const endOfTargetMonth = endOfMonth(targetMonth)
+
+  let totalQuestions = 0
+  let daysWithQuestions = 0
+
+  Object.entries(allCounts).forEach(([dateStr, counts]) => {
+    const date = new Date(dateStr)
+    if (date >= startOfTargetMonth && date <= endOfTargetMonth) {
+      const dailyTotal = Object.values(counts).reduce(
+        (acc, count) => acc + count,
+        0
+      )
+      totalQuestions += dailyTotal
+      if (dailyTotal > 0) {
+        daysWithQuestions++
+      }
+    }
+  })
+
+  const averageQuestionsPerActiveDay =
+    daysWithQuestions > 0 ? totalQuestions / daysWithQuestions : 0
+
+  const ratioToPreviousMonth = null
+  return { totalQuestions, averageQuestionsPerActiveDay, ratioToPreviousMonth }
+}
 
 const OptionStatistics = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -64,10 +94,26 @@ const OptionStatistics = () => {
         }
       },
       y: {
+        stacked: true,
         beginAtZero: true
       }
     }
   })
+
+  const [statistics, setStatistics] = useState({
+    totalQuestions: 0,
+    averageQuestionsPerActiveDay: 0,
+    ratioToPreviousMonth: null
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const allCounts = await getCountData()
+      const stats = calculateMonthlyStatistics(allCounts, currentDate)
+      setStatistics(stats)
+    }
+    fetchData()
+  }, [currentDate])
 
   const updateChartData = async (date: Date) => {
     const allCounts = await getCountData()
@@ -107,7 +153,6 @@ const OptionStatistics = () => {
       ]
     })
   }
-
   useEffect(() => {
     updateChartData(currentDate)
     setOptions((currentOptions) => ({
@@ -124,7 +169,6 @@ const OptionStatistics = () => {
 
   const handlePrevMonth = async () => {
     const oldestDataMonth = await findOldestDataMonth()
-
     setCurrentDate((prevDate) => {
       const newDate = addMonths(prevDate, -1)
       return isBefore(startOfMonth(newDate), startOfMonth(oldestDataMonth))
@@ -132,7 +176,6 @@ const OptionStatistics = () => {
         : newDate
     })
   }
-
   const handleNextMonth = () => {
     const today = new Date()
     setCurrentDate((prevDate) => {
@@ -159,6 +202,26 @@ const OptionStatistics = () => {
       </div>
       <div className={styles.content}>
         <Line data={data} options={options} />
+        <div className={styles.infoSection}>
+          <div className={styles.infoBox}>
+            <div className={styles.infoTitle}>その月の質問数</div>
+            <div className={styles.infoValue}>{statistics.totalQuestions}</div>
+          </div>
+          <div className={styles.infoBox}>
+            <div className={styles.infoTitle}>質問した日の平均質問数</div>
+            <div className={styles.infoValue}>
+              {statistics.averageQuestionsPerActiveDay.toFixed(2)}
+            </div>
+          </div>
+          <div className={styles.infoBox}>
+            <div className={styles.infoTitle}>前月との比率</div>
+            <div className={styles.infoValue}>
+              {statistics.ratioToPreviousMonth !== null
+                ? `${(statistics.ratioToPreviousMonth * 100).toFixed(2)}%`
+                : "N/A"}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
