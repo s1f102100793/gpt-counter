@@ -18,26 +18,28 @@ chrome.runtime.onInstalled.addListener(async () => {
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "resetLimit") {
     resetLimitSetting()
+    setDailyResetAlarm()
   }
 })
 
 const setDailyResetAlarm = () => {
   const now = new Date()
-  const resetTime = new Date(
+  const nextMidnight = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
-    15
+    now.getDate() + 1,
+    0,
+    0,
+    0
   )
-  const when = resetTime.getTime() + 24 * 60 * 60 * 1000
-  chrome.alarms.create("resetLimit", { when, periodInMinutes: 1440 })
+  const when = nextMidnight.getTime()
+  chrome.alarms.create("resetLimit", { when })
 }
 
 const resetLimitSetting = async () => {
   const previousSetting = await getLimitSetting()
   const defaultSetting = getLimitSettingByDifficulty(previousSetting.difficulty)
   if (defaultSetting === undefined) return
-
   await savetLimitSetting(defaultSetting)
 }
 
