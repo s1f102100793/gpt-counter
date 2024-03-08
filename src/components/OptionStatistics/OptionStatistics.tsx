@@ -35,7 +35,8 @@ ChartJS.register(
 )
 
 const OptionStatistics = () => {
-  const [currentDate, setCurrentDate] = useState(new Date())
+  const today = new Date()
+  const [currentDate, setCurrentDate] = useState(today)
   const [data, setData] = useState<ChartData<"line">>({
     labels: [],
     datasets: []
@@ -65,12 +66,26 @@ const OptionStatistics = () => {
       }
     }
   })
-
   const [statistics, setStatistics] = useState({
     totalQuestions: 0,
     averageQuestionsPerActiveDay: 0,
     ratioToPreviousMonth: null
   })
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+
+  const getChartData = async (date: Date) => {
+    await updateChartData(date).then((chartData) => {
+      setData(chartData)
+    })
+  }
+  const fetchOldestDataMonth = async () => {
+    const today = new Date()
+    await findOldestDataMonth().then((oldestDataMonth) => {
+      if (isBefore(startOfMonth(today), startOfMonth(oldestDataMonth))) {
+        setIsButtonDisabled(true)
+      }
+    })
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,15 +94,8 @@ const OptionStatistics = () => {
       setStatistics(stats)
     }
     fetchData()
-  }, [currentDate])
-
-  const getChartData = async (date: Date) => {
-    await updateChartData(date).then((chartData) => {
-      setData(chartData)
-    })
-  }
-  useEffect(() => {
     getChartData(currentDate)
+    fetchOldestDataMonth()
     setOptions((currentOptions) => ({
       ...currentOptions,
       plugins: {
@@ -124,14 +132,16 @@ const OptionStatistics = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.title}>統計ダッシュボード</div>
-        <div className={styles.controls}>
-          <button className={styles.changeButton} onClick={handlePrevMonth}>
-            prev
-          </button>
-          <button className={styles.changeButton} onClick={handleNextMonth}>
-            next
-          </button>
-        </div>
+        {isButtonDisabled && (
+          <div className={styles.controls}>
+            <button className={styles.changeButton} onClick={handlePrevMonth}>
+              prev
+            </button>
+            <button className={styles.changeButton} onClick={handleNextMonth}>
+              next
+            </button>
+          </div>
+        )}
       </div>
       <div className={styles.content}>
         <Line data={data} options={options} />
