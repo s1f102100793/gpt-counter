@@ -1,10 +1,6 @@
-import {
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  isAfter,
-  startOfMonth
-} from "date-fns"
+import { eachDayOfInterval, endOfMonth, startOfMonth } from "date-fns"
+import { format } from "date-fns-tz"
+import { isAfter } from "date-fns/esm"
 
 import { getCountData } from "./dailyCount"
 
@@ -49,12 +45,11 @@ export const updateChartData = async (date: Date) => {
   const eachDay = eachDayOfInterval({ start: startDate, end: endDate })
   const labels = eachDay.map((day) => format(day, "yyyy-MM-dd"))
   const model3Data = labels.map((date) =>
-    isAfter(new Date(date), tomorrow) ? null : allCounts[date]?.["3.5"] || 0
+    isAfter(new Date(date), today) ? null : allCounts[date]?.["3.5"] || 0
   )
   const model4Data = labels.map((date) =>
-    isAfter(new Date(date), tomorrow) ? null : allCounts[date]?.["4"] || 0
+    isAfter(new Date(date), today) ? null : allCounts[date]?.["4"] || 0
   )
-
   return {
     labels,
     datasets: [
