@@ -1,4 +1,11 @@
-import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
+import {
+  eachDayOfInterval,
+  endOfDay,
+  endOfMonth,
+  format,
+  isAfter,
+  startOfMonth
+} from "date-fns"
 
 import { getCountData } from "./dailyCount"
 
@@ -63,24 +70,20 @@ export const calculateMonthlyStatistics = (
     ratioToPreviousMonth
   }
 }
-const isAfter = (date: Date, target: Date) => {
-  return date.getTime() > target.getTime()
-}
 
 export const updateChartData = async (date: Date) => {
   const allCounts = await getCountData()
   const today = new Date()
-  today.setDate(today.getDate())
-  today.setHours(24, 0, 0, 0)
+  const endOfToday = endOfDay(today)
   const startDate = startOfMonth(date)
   const endDate = endOfMonth(date)
   const eachDay = eachDayOfInterval({ start: startDate, end: endDate })
   const labels = eachDay.map((day) => format(day, "yyyy-MM-dd"))
   const model3Data = labels.map((date) =>
-    isAfter(new Date(date), today) ? null : allCounts[date]?.["3.5"] || 0
+    isAfter(new Date(date), endOfToday) ? null : allCounts[date]?.["3.5"] || 0
   )
   const model4Data = labels.map((date) =>
-    isAfter(new Date(date), today) ? null : allCounts[date]?.["4"] || 0
+    isAfter(new Date(date), endOfToday) ? null : allCounts[date]?.["4"] || 0
   )
 
   return {
