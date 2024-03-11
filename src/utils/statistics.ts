@@ -2,19 +2,17 @@ import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns"
 
 import { getCountData } from "./dailyCount"
 
-export const calculateMonthlyStatistics = (
+const calculateStatisticsForMonth = (
   allCounts: Record<string, Record<string, number>>,
-  targetMonth: Date
+  startOfMonth: Date,
+  endOfMonth: Date
 ) => {
-  const startOfTargetMonth = startOfMonth(targetMonth)
-  const endOfTargetMonth = endOfMonth(targetMonth)
-
   let totalQuestions = 0
   let daysWithQuestions = 0
 
   Object.entries(allCounts).forEach(([dateStr, counts]) => {
     const date = new Date(dateStr)
-    if (date >= startOfTargetMonth && date <= endOfTargetMonth) {
+    if (date >= startOfMonth && date <= endOfMonth) {
       const dailyTotal = Object.values(counts).reduce(
         (acc, count) => acc + count,
         0
@@ -29,10 +27,42 @@ export const calculateMonthlyStatistics = (
   const averageQuestionsPerActiveDay =
     daysWithQuestions > 0 ? totalQuestions / daysWithQuestions : 0
 
-  const ratioToPreviousMonth = null
-  return { totalQuestions, averageQuestionsPerActiveDay, ratioToPreviousMonth }
+  return { totalQuestions, averageQuestionsPerActiveDay }
 }
 
+export const calculateMonthlyStatistics = (
+  allCounts: Record<string, Record<string, number>>,
+  targetMonth: Date
+) => {
+  const startOfTargetMonth = startOfMonth(targetMonth)
+  const endOfTargetMonth = endOfMonth(targetMonth)
+  const startOfLastMonth = startOfMonth(
+    new Date(targetMonth.getFullYear(), targetMonth.getMonth() - 1)
+  )
+  const endOfLastMonth = endOfMonth(startOfLastMonth)
+
+  const targetMonthStats = calculateStatisticsForMonth(
+    allCounts,
+    startOfTargetMonth,
+    endOfTargetMonth
+  )
+  const lastMonthStats = calculateStatisticsForMonth(
+    allCounts,
+    startOfLastMonth,
+    endOfLastMonth
+  )
+
+  const ratioToPreviousMonth =
+    lastMonthStats.totalQuestions > 0
+      ? (targetMonthStats.totalQuestions / lastMonthStats.totalQuestions) * 100
+      : 0
+
+  return {
+    totalQuestions: targetMonthStats.totalQuestions,
+    averageQuestionsPerActiveDay: targetMonthStats.averageQuestionsPerActiveDay,
+    ratioToPreviousMonth
+  }
+}
 const isAfter = (date: Date, target: Date) => {
   return date.getTime() > target.getTime()
 }

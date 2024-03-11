@@ -69,7 +69,7 @@ const OptionStatistics = () => {
   const [statistics, setStatistics] = useState({
     totalQuestions: 0,
     averageQuestionsPerActiveDay: 0,
-    ratioToPreviousMonth: null
+    ratioToPreviousMonth: 0
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
@@ -160,7 +160,7 @@ const OptionStatistics = () => {
             <div className={styles.infoTitle}>前月との比率</div>
             <div className={styles.infoValue}>
               {statistics.ratioToPreviousMonth !== null
-                ? `${(statistics.ratioToPreviousMonth * 100).toFixed(2)}%`
+                ? `${statistics.ratioToPreviousMonth.toFixed(2)}%`
                 : "N/A"}
             </div>
           </div>
