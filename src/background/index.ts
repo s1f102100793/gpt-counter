@@ -14,36 +14,34 @@ import "@plasmohq/messaging/background"
 
 import { startHub } from "@plasmohq/messaging/pub-sub"
 
-export {}
-
 const storage: Storage = new Storage()
+const resetLimitKey = "resetLimit"
 
 chrome.runtime.onInstalled.addListener(async () => {
-  console.log("onInstalled")
-  setDailyResetAlarm()
+  setResetAlarm()
   await initializeDailyCountStorage()
 })
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === "resetLimit") {
-    console.log("resetLimit alarm triggered")
+  if (alarm.name === resetLimitKey) {
     await resetLimitSetting()
-    setDailyResetAlarm()
+    chrome.alarms.clear(resetLimitKey)
+    setResetAlarm()
   }
 })
 
-const setDailyResetAlarm = () => {
+const setResetAlarm = () => {
   const now = new Date()
   const nextMidnight = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate() + 0,
-    19,
-    56,
+    now.getDate() + 1,
+    0,
+    0,
     0
   )
   const when = nextMidnight.getTime()
-  chrome.alarms.create("resetLimit", { when, periodInMinutes: 24 * 60 })
+  chrome.alarms.create(resetLimitKey, { when, periodInMinutes: 24 * 60 })
 }
 
 const resetLimitSetting = async () => {
@@ -51,7 +49,6 @@ const resetLimitSetting = async () => {
   const defaultSetting = getLimitSettingByDifficulty(previousSetting.difficulty)
   if (defaultSetting === undefined) return
   await savetLimitSetting(defaultSetting)
-  console.log("Limit settings have been reset.")
 }
 
 const initializeDailyCountStorage = async () => {
@@ -64,5 +61,4 @@ const initializeDailyCountStorage = async () => {
   }
 }
 
-console.log(`BGSW - Starting Hub`)
 startHub()
