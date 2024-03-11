@@ -54,7 +54,7 @@ const OptionsLimitSetting = () => {
                 sx={{
                   fontWeight: "bold",
                   fontSize: "16px",
-                  width: "25%",
+                  width: `calc(100% / ${tabData.length})`,
                   "&.Mui-selected": { color: "green" }
                 }}
               />
