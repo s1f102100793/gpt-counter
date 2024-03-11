@@ -3,6 +3,7 @@ import React, { useState } from "react"
 
 import { a11yProps } from "../../mui/a11yProps"
 import { TabPanel } from "../../mui/TabPanel"
+import CustomLimitSetting from "./Difficulty/Custom/CustomLimitSetting"
 import EasyLimitSetting from "./Difficulty/Easy/EasyLimitSetting"
 import HardLimitSetting from "./Difficulty/Hard/HardLimitSetting"
 import NormalLimitSetting from "./Difficulty/Normal/NormalLimitSetting"
@@ -14,7 +15,8 @@ const OptionsLimitSetting = () => {
   const tabData = [
     { label: "イージー", content: <EasyLimitSetting /> },
     { label: "ノーマル", content: <NormalLimitSetting /> },
-    { label: "ハード", content: <HardLimitSetting /> }
+    { label: "ハード", content: <HardLimitSetting /> },
+    { label: "カスタム", content: <CustomLimitSetting /> }
   ]
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -52,7 +54,7 @@ const OptionsLimitSetting = () => {
                 sx={{
                   fontWeight: "bold",
                   fontSize: "16px",
-                  width: "33%",
+                  width: "25%",
                   "&.Mui-selected": { color: "green" }
                 }}
               />
