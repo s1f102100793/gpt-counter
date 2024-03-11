@@ -81,7 +81,7 @@ const OptionStatistics = () => {
   const fetchOldestDataMonth = async () => {
     const today = new Date()
     await findOldestDataMonth().then((oldestDataMonth) => {
-      if (isBefore(startOfMonth(today), startOfMonth(oldestDataMonth))) {
+      if (isBefore(startOfMonth(oldestDataMonth), startOfMonth(today))) {
         setIsButtonDisabled(true)
       }
     })
