@@ -1,6 +1,7 @@
 import { FormControlLabel } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
+import { changeSettingAlert } from "src/utils/alert"
 import {
   checkLimitRemoved,
   getCustomLimitSetting,
@@ -25,6 +26,8 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     setLimit(Number(event.target.value))
   }
   const changeToCustomLimitSetting = async () => {
+    const userConfirmed = await changeSettingAlert()
+    if (!userConfirmed) return
     const CustomLimitSetting = await getCustomLimitSetting()
     let newSetting: LimitSettingType = {
       ...CustomLimitSetting,

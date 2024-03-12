@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
+import { changeSettingAlert } from "src/utils/alert"
 import {
   checkLimitRemoved,
   getLimitSetting,
@@ -28,6 +29,8 @@ const OptionsLimitSetting = () => {
   }
 
   const handleDifficultyChange = async (difficulty: string) => {
+    const userConfirmed = await changeSettingAlert()
+    if (!userConfirmed) return
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
     newSetting = checkLimitRemoved(limitSetting, newSetting)
