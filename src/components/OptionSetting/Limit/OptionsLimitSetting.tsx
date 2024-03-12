@@ -1,5 +1,11 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useState } from "react"
+import {
+  getLimitSettingByDifficulty,
+  normalLimitSetting,
+  savetLimitSetting,
+  type LimitSettingType
+} from "src/utils/limitSetting"
 
 import { a11yProps } from "../../mui/a11yProps"
 import { TabPanel } from "../../mui/TabPanel"
@@ -11,17 +17,48 @@ import styles from "./OptionLimitSetting.module.css"
 
 const OptionsLimitSetting = () => {
   const [value, setValue] = useState(0)
-
-  const tabData = [
-    { label: "イージー", content: <EasyLimitSetting /> },
-    { label: "ノーマル", content: <NormalLimitSetting /> },
-    { label: "ハード", content: <HardLimitSetting /> },
-    { label: "カスタム", content: <CustomLimitSetting /> }
-  ]
+  const [limitSetting, setLimitSetting] =
+    useState<LimitSettingType>(normalLimitSetting)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
+
+  const handleDifficultyChange = async (difficulty: string) => {
+    let newSetting = getLimitSettingByDifficulty(difficulty)
+    if (newSetting === undefined) return
+    if (limitSetting.isLimitRemoved) {
+      newSetting = {
+        ...newSetting,
+        isLimitRemoved: true,
+        limit: Number.MAX_SAFE_INTEGER
+      }
+    }
+    setLimitSetting(newSetting)
+    await savetLimitSetting(newSetting)
+  }
+
+  const tabData = [
+    {
+      label: "イージー",
+      content: (
+        <EasyLimitSetting handleDifficultyChange={handleDifficultyChange} />
+      )
+    },
+    {
+      label: "ノーマル",
+      content: (
+        <NormalLimitSetting handleDifficultyChange={handleDifficultyChange} />
+      )
+    },
+    {
+      label: "ハード",
+      content: (
+        <HardLimitSetting handleDifficultyChange={handleDifficultyChange} />
+      )
+    },
+    { label: "カスタム", content: <CustomLimitSetting /> }
+  ]
 
   return (
     <div className={styles.container}>

@@ -1,7 +1,7 @@
 import { FormControlLabel } from "@mui/material"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 
-import styles from "./CustomLimitSetting.module.css"
+import styles from "../Difficulty.module.css"
 
 const CustomLimitSetting = () => {
   return (
@@ -9,7 +9,7 @@ const CustomLimitSetting = () => {
       <ul className={styles.content}>
         <li>質問の制限をかける</li>
         <FormControlLabel
-          control={<IOSSwitch sx={{ m: 1 }} />}
+          control={<IOSSwitch />}
           label=""
           labelPlacement="start"
         />
