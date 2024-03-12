@@ -1,5 +1,5 @@
 import { FormControlLabel } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import {
   checkLimitRemoved,
@@ -19,10 +19,8 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   limitSetting,
   setLimitSetting
 }) => {
-  const [isCountOnly, setIsCountOnly] = useState<boolean>(
-    limitSetting.isCountOnly as boolean
-  )
-  const [limit, setLimit] = useState<number>(limitSetting.limit)
+  const [isCountOnly, setIsCountOnly] = useState<boolean>(false)
+  const [limit, setLimit] = useState<number>(0)
   const handleChangeLimit = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLimit(Number(event.target.value))
   }
@@ -38,6 +36,16 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     setLimitSetting(newSetting)
     await savetLimitSetting(newSetting)
   }
+
+  const fetchCustomLimitSetting = async () => {
+    await getCustomLimitSetting().then((setting) => {
+      setLimit(setting.limit)
+      setIsCountOnly(setting.isCountOnly as boolean)
+    })
+  }
+  useEffect(() => {
+    fetchCustomLimitSetting()
+  }, [])
 
   return (
     <div className={styles.container}>
