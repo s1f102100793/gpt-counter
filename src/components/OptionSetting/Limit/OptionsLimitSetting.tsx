@@ -27,7 +27,7 @@ const OptionsLimitSetting = () => {
   }
 
   const handleDifficultyChange = async (difficulty: string) => {
-    let newSetting = getLimitSettingByDifficulty(difficulty)
+    let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
     if (limitSetting.isLimitRemoved) {
       newSetting = {
@@ -74,7 +74,12 @@ const OptionsLimitSetting = () => {
         <HardLimitSetting handleDifficultyChange={handleDifficultyChange} />
       )
     },
-    { label: "カスタム", content: <CustomLimitSetting /> }
+    {
+      label: "カスタム",
+      content: (
+        <CustomLimitSetting handleDifficultyChange={handleDifficultyChange} />
+      )
+    }
   ]
 
   return (

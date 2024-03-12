@@ -3,11 +3,13 @@ import { Storage } from "@plasmohq/storage"
 const storage: Storage = new Storage()
 
 export const limitSettingKey = "limitSetting"
+export const customLimitSettingKey = "customLimitSetting"
 
 export type LimitSettingType = {
-  difficulty: "easy" | "normal" | "hard"
+  difficulty: "easy" | "normal" | "hard" | "custom"
   limit: number
   isLimitRemoved: boolean
+  isCountOnly?: boolean
 }
 
 export const easyLimitSetting: LimitSettingType = {
@@ -28,6 +30,13 @@ export const hardLimitSetting: LimitSettingType = {
   isLimitRemoved: false
 } as const
 
+export const defaultCustomLimitSetting: LimitSettingType = {
+  difficulty: "custom",
+  limit: 10,
+  isLimitRemoved: false,
+  isCountOnly: false
+} as const
+
 export const getLimitSetting = async (): Promise<LimitSettingType> => {
   const limitSetting = await storage.get(limitSettingKey)
   if (limitSetting === null || limitSetting === undefined)
@@ -40,9 +49,17 @@ export const savetLimitSetting = async (setting: LimitSettingType) => {
   await storage.set(limitSettingKey, JSON.stringify(setting))
 }
 
-export const getLimitSettingByDifficulty = (
+const getCustomLimitSetting = async (): Promise<LimitSettingType> => {
+  const limitSetting = await storage.get(customLimitSettingKey)
+  if (limitSetting === null || limitSetting === undefined)
+    return defaultCustomLimitSetting
+
+  return JSON.parse(limitSetting)
+}
+
+export const getLimitSettingByDifficulty = async (
   difficulty: string
-): LimitSettingType | undefined => {
+): Promise<LimitSettingType | undefined> => {
   switch (difficulty) {
     case "easy":
       return easyLimitSetting
@@ -50,6 +67,8 @@ export const getLimitSettingByDifficulty = (
       return normalLimitSetting
     case "hard":
       return hardLimitSetting
+    case "custom":
+      return await getCustomLimitSetting()
     default:
       return undefined
   }
@@ -65,6 +84,8 @@ export const getValueByLimitSetting = (
       return 1
     case "hard":
       return 2
+    case "custom":
+      return 3
     default:
       return 0
   }

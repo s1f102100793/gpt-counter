@@ -46,7 +46,9 @@ const setResetAlarm = () => {
 
 const resetLimitSetting = async () => {
   const previousSetting = await getLimitSetting()
-  const defaultSetting = getLimitSettingByDifficulty(previousSetting.difficulty)
+  const defaultSetting = await getLimitSettingByDifficulty(
+    previousSetting.difficulty
+  )
   if (defaultSetting === undefined) return
   await savetLimitSetting(defaultSetting)
 }

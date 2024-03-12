@@ -44,7 +44,7 @@ const Popup = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newDifficulty = event.target.value
-    let newSetting = getLimitSettingByDifficulty(newDifficulty)
+    let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
     if (limitSetting.isLimitRemoved) {
       newSetting = {
