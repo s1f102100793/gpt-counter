@@ -79,7 +79,12 @@ const HeaderCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (!isLayoutDisplay || limitSetting.isLimitRemoved) return null
+  if (
+    !isLayoutDisplay ||
+    limitSetting.isLimitRemoved ||
+    limitSetting?.isCountOnly === true
+  )
+    return null
 
   return (
     <div className={styles.container}>
