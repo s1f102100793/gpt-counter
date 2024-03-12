@@ -54,3 +54,18 @@ export const getLimitSettingByDifficulty = (
       return undefined
   }
 }
+
+export const getValueByLimitSetting = (
+  limitSettingType: LimitSettingType
+): number => {
+  switch (limitSettingType.difficulty) {
+    case "easy":
+      return 0
+    case "normal":
+      return 1
+    case "hard":
+      return 2
+    default:
+      return 0
+  }
+}

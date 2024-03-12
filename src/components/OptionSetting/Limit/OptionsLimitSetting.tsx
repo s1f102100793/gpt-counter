@@ -1,7 +1,9 @@
 import { Box, Tab, Tabs } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
+  getLimitSetting,
   getLimitSettingByDifficulty,
+  getValueByLimitSetting,
   normalLimitSetting,
   savetLimitSetting,
   type LimitSettingType
@@ -34,9 +36,24 @@ const OptionsLimitSetting = () => {
         limit: Number.MAX_SAFE_INTEGER
       }
     }
+    setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)
     await savetLimitSetting(newSetting)
   }
+
+  const fetchLimitSetting = async () => {
+    await getLimitSetting().then((setting) => {
+      setValue(getValueByLimitSetting(setting))
+      setLimitSetting(setting)
+    })
+  }
+
+  useEffect(() => {
+    fetchLimitSetting()
+  }, [])
+  chrome.storage.onChanged.addListener(() => {
+    fetchLimitSetting()
+  })
 
   const tabData = [
     {
