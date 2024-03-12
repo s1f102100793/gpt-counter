@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import {
+  checkLimitRemoved,
   getLimitSetting,
   getLimitSettingByDifficulty,
   getValueByLimitSetting,
@@ -29,13 +30,7 @@ const OptionsLimitSetting = () => {
   const handleDifficultyChange = async (difficulty: string) => {
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
-    if (limitSetting.isLimitRemoved) {
-      newSetting = {
-        ...newSetting,
-        isLimitRemoved: true,
-        limit: Number.MAX_SAFE_INTEGER
-      }
-    }
+    newSetting = checkLimitRemoved(limitSetting, newSetting)
     setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)
     await savetLimitSetting(newSetting)
@@ -77,7 +72,10 @@ const OptionsLimitSetting = () => {
     {
       label: "カスタム",
       content: (
-        <CustomLimitSetting handleDifficultyChange={handleDifficultyChange} />
+        <CustomLimitSetting
+          limitSetting={limitSetting}
+          setLimitSetting={setLimitSetting}
+        />
       )
     }
   ]

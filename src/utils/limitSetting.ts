@@ -11,31 +11,41 @@ export type LimitSettingType = {
   isLimitRemoved: boolean
   isCountOnly?: boolean
 }
-
 export const easyLimitSetting: LimitSettingType = {
   difficulty: "easy",
   limit: 15,
   isLimitRemoved: false
 } as const
-
 export const normalLimitSetting: LimitSettingType = {
   difficulty: "normal",
   limit: 10,
   isLimitRemoved: false
 } as const
-
 export const hardLimitSetting: LimitSettingType = {
   difficulty: "hard",
   limit: 5,
   isLimitRemoved: false
 } as const
-
 export const defaultCustomLimitSetting: LimitSettingType = {
   difficulty: "custom",
   limit: 10,
   isLimitRemoved: false,
   isCountOnly: false
 } as const
+
+export const checkLimitRemoved = (
+  setting: LimitSettingType,
+  copySetting: LimitSettingType
+) => {
+  if (setting.isLimitRemoved) {
+    return {
+      ...copySetting,
+      isLimitRemoved: true,
+      limit: Number.MAX_SAFE_INTEGER
+    }
+  }
+  return copySetting
+}
 
 export const getLimitSetting = async (): Promise<LimitSettingType> => {
   const limitSetting = await storage.get(limitSettingKey)
@@ -44,17 +54,19 @@ export const getLimitSetting = async (): Promise<LimitSettingType> => {
 
   return JSON.parse(limitSetting)
 }
-
 export const savetLimitSetting = async (setting: LimitSettingType) => {
   await storage.set(limitSettingKey, JSON.stringify(setting))
 }
 
-const getCustomLimitSetting = async (): Promise<LimitSettingType> => {
+export const getCustomLimitSetting = async (): Promise<LimitSettingType> => {
   const limitSetting = await storage.get(customLimitSettingKey)
   if (limitSetting === null || limitSetting === undefined)
     return defaultCustomLimitSetting
 
   return JSON.parse(limitSetting)
+}
+export const saveCustomLimitSetting = async (setting: LimitSettingType) => {
+  await storage.set(customLimitSettingKey, JSON.stringify(setting))
 }
 
 export const getLimitSettingByDifficulty = async (
@@ -73,7 +85,6 @@ export const getLimitSettingByDifficulty = async (
       return undefined
   }
 }
-
 export const getValueByLimitSetting = (
   limitSettingType: LimitSettingType
 ): number => {

@@ -5,12 +5,40 @@
   height: 100%;
 }
 
-.content {
+.content,
+.customContent {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
   align-items: center;
+  gap: 16px;
+}
+
+.content {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.divWithMarker::before {
+  content: "";
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 2px;
+  margin-left: -14px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: black;
+  align-self: center;
+}
+
+.customContent {
+  flex-direction: column;
+}
+
+.limitInput {
+  text-align: right;
+  padding: 4px;
+  font-size: 16px;
 }
 
 .buttonContainer {

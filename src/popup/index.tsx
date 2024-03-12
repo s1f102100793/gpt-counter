@@ -8,6 +8,7 @@ import {
   savetLayoutSetting
 } from "src/utils/layoutSetting"
 import {
+  checkLimitRemoved,
   getLimitSetting,
   getLimitSettingByDifficulty,
   normalLimitSetting,
@@ -46,13 +47,7 @@ const Popup = () => {
     const newDifficulty = event.target.value
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
-    if (limitSetting.isLimitRemoved) {
-      newSetting = {
-        ...newSetting,
-        isLimitRemoved: true,
-        limit: Number.MAX_SAFE_INTEGER
-      }
-    }
+    newSetting = checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
     await savetLimitSetting(newSetting)
   }
