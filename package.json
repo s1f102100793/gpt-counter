@@ -1,9 +1,9 @@
 {
-  "name": "gugure",
-  "displayName": "Gugure",
+  "name": "gpt-counter",
+  "displayName": "gpt-counter",
   "version": "0.0.1",
-  "description": "ChatGPT suppression service",
-  "author": "Plasmo Corp. <foss@plasmo.com>",
+  "description": "ChatGPTの質問回数を制限、可視化する拡張機能",
+  "author": "Gota Nakagawa",
   "scripts": {
     "dev": "run-p dev:*",
     "dev:plasmo": "plasmo dev",
