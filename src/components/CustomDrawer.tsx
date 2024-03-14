@@ -6,7 +6,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Toolbar
+  Toolbar,
+  Typography
 } from "@mui/material"
 
 interface CustomDrawerProps {
@@ -22,7 +23,11 @@ const CustomDrawer = ({ onSelect, selectedValue }: CustomDrawerProps) => {
 
   return (
     <div style={{ backgroundColor: "#f1f1f1", minHeight: "100vh" }}>
-      <Toolbar />
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ fontSize: "24px" }}>
+          GPT-Counter
+        </Typography>
+      </Toolbar>
       <List>
         {navItems.map(({ text, Icon, value }) => (
           <ListItem key={text} disablePadding>

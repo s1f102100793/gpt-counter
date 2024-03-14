@@ -75,7 +75,7 @@ const Popup = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.appName}>Gugure</div>
+        <div className={styles.appName}>GPT-Counter</div>
         <SettingsOutlinedIcon
           className={styles.settingIcon}
           onClick={navigateToSettings}
