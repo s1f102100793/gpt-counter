@@ -6,12 +6,7 @@ import OptionsContent from "src/components/OptionsContent"
 const drawerWidth = 240
 
 function OptionsIndex() {
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState("statistics")
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
-  }
 
   const handleSelectItem = (value: string) => {
     setSelectedItem(value)
@@ -29,26 +24,9 @@ function OptionsIndex() {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders">
         <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth
-            }
-          }}>
-          <CustomDrawer
-            onSelect={handleSelectItem}
-            selectedValue={selectedItem}
-          />
-        </Drawer>
-        <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { xs: "none", sm: "none", md: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth
