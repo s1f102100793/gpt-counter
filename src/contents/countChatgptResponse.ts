@@ -1,5 +1,10 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { updateEventCount } from "src/utils/dailyCount"
+import {
+  gptModelClassName,
+  gptResponseClassName,
+  gptResponseParentElements
+} from "src/utils/elements"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -7,14 +12,6 @@ export const config: PlasmoCSConfig = {
 }
 
 let observer: MutationObserver | null = null
-
-const gptResponseParentElements = document.querySelector(
-  ".flex-1.overflow-hidden"
-)
-const gptResponseClassName = ".relative.flex.w-full.flex-col.agent-turn"
-const gptModelClassName = ".group .text-token-text-secondary"
-const deepClassName =
-  ".flex.items-center.relative.text-token-text-secondary.bg-token-main-surface-secondary.px-4.py-2.text-xs.font-sans.justify-between.rounded-t-md"
 
 const countDefaultElements = (): Promise<number> => {
   return new Promise((resolve) => {
@@ -25,18 +22,10 @@ const countDefaultElements = (): Promise<number> => {
     }, 1000)
   })
 }
-const countCodeElements = (elements: NodeListOf<Element>) => {
-  return Array.from(elements).filter((element) =>
-    element.querySelector(deepClassName)
-  ).length
-}
 
 const observeDOMChanges = async (): Promise<void> => {
   if (gptResponseParentElements) {
     let currentCount = await countDefaultElements()
-    const codeCurrentCount = countCodeElements(
-      gptResponseParentElements.querySelectorAll(gptResponseClassName)
-    )
     const mutationCallback: MutationCallback = async () => {
       const gptResponseElements =
         document.querySelectorAll(gptResponseClassName)

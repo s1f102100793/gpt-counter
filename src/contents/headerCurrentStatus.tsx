@@ -2,6 +2,7 @@ import styleText from "data-text:./styles/headerCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 import { getDailyCount } from "src/utils/dailyCount"
+import { headerClassName } from "src/utils/elements"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -18,9 +19,7 @@ export const config: PlasmoCSConfig = {
 }
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
-  const element = document.querySelector(
-    ".group.flex.cursor-pointer.items-center.gap-1.rounded-xl.py-2.px-3.text-lg.font-medium.hover\\:bg-token-main-surface-secondary.radix-state-open\\:bg-token-main-surface-secondary"
-  )
+  const element = document.querySelector(headerClassName)
   return element as Element
 }
 

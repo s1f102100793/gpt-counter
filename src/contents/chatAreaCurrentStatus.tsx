@@ -2,6 +2,7 @@ import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
 import { getDailyCount } from "src/utils/dailyCount"
+import { gptResponseClassName } from "src/utils/elements"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
@@ -24,9 +25,7 @@ export const getStyle = () => {
 }
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
-  const elements = document.querySelectorAll(
-    ".relative.flex.w-full.flex-col.agent-turn"
-  )
+  const elements = document.querySelectorAll(gptResponseClassName)
   const parentElements = Array.from(elements)
     .map((element) => element.parentElement)
     .filter((parent) => parent !== null)
