@@ -1,21 +1,14 @@
-import {
-  getCurrentDateInJST,
-  gptResponsesStorageKey
-} from "src/utils/count/responseCount"
+import { getCurrentDateInJST } from "src/utils/count/responseCount"
 import {
   getLimitSetting,
   getLimitSettingByDifficulty,
   savetLimitSetting
 } from "src/utils/limitSetting"
-
-import { Storage } from "@plasmohq/storage"
+import { key, storage } from "src/utils/storage"
 
 import "@plasmohq/messaging/background"
 
 import { startHub } from "@plasmohq/messaging/pub-sub"
-
-const storage: Storage = new Storage()
-const resetLimitKey = "resetLimit"
 
 chrome.runtime.onInstalled.addListener(async () => {
   setResetAlarm()
@@ -23,9 +16,9 @@ chrome.runtime.onInstalled.addListener(async () => {
 })
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === resetLimitKey) {
+  if (alarm.name === key.resetLimit()) {
     await resetLimitSetting()
-    chrome.alarms.clear(resetLimitKey)
+    chrome.alarms.clear(key.resetLimit())
     setResetAlarm()
   }
 })
@@ -41,7 +34,7 @@ const setResetAlarm = () => {
     0
   )
   const when = nextMidnight.getTime()
-  chrome.alarms.create(resetLimitKey, { when, periodInMinutes: 24 * 60 })
+  chrome.alarms.create(key.resetLimit(), { when, periodInMinutes: 24 * 60 })
 }
 
 const resetLimitSetting = async () => {
@@ -57,9 +50,9 @@ const initializeDailyCountStorage = async () => {
   const today = getCurrentDateInJST()
   const initialData = { [today]: 0 }
 
-  const existingData = await storage.get(gptResponsesStorageKey)
+  const existingData = await storage.get(key.gptResponses())
   if (existingData === null || existingData === undefined) {
-    await storage.set(gptResponsesStorageKey, initialData)
+    await storage.set(key.gptResponses(), initialData)
   }
 }
 

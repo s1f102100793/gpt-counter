@@ -1,6 +1,4 @@
-import { Storage } from "@plasmohq/storage"
-
-const storage: Storage = new Storage()
+import { key, storage } from "../storage"
 
 export const getCurrentDateInJST = (): string => {
   const now = new Date()
@@ -15,11 +13,9 @@ export const getCurrentDateInJST = (): string => {
   return `${year}-${month}-${day}`
 }
 
-export const gptResponsesStorageKey = `gptResponses`
-
 export const updateResponseDailyCount = async (event: string) => {
   const today = getCurrentDateInJST()
-  const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
+  const storageResult = (await storage.get(key.gptResponses())) as unknown
   const allCounts =
     (storageResult as Record<string, Record<string, number>>) ?? {}
   if (allCounts[today] === undefined || allCounts[today] === null) {
@@ -29,13 +25,13 @@ export const updateResponseDailyCount = async (event: string) => {
     allCounts[today][event] = 0
   }
   allCounts[today][event] += 1
-  await storage.set(gptResponsesStorageKey, allCounts)
+  await storage.set(key.gptResponses(), allCounts)
 }
 
 export const getResponseDailyCount = async (date?: string): Promise<number> => {
   const targetDate = date ?? getCurrentDateInJST()
 
-  const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
+  const storageResult = (await storage.get(key.gptResponses())) as unknown
   const allCounts =
     (storageResult as Record<string, Record<string, number>>) ?? {}
 
@@ -55,7 +51,7 @@ export const getResponseDailyCount = async (date?: string): Promise<number> => {
 export const getResponseAllCounts = async (): Promise<
   Record<string, Record<string, number>>
 > => {
-  const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
+  const storageResult = (await storage.get(key.gptResponses())) as unknown
   const allCounts =
     (storageResult as Record<string, Record<string, number>>) ?? {}
 

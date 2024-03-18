@@ -1,9 +1,4 @@
-import { Storage } from "@plasmohq/storage"
-
-const storage: Storage = new Storage()
-
-export const limitSettingKey = "limitSetting"
-export const customLimitSettingKey = "customLimitSetting"
+import { key, storage } from "./storage"
 
 export type LimitSettingType = {
   difficulty: "easy" | "normal" | "hard" | "custom"
@@ -48,25 +43,25 @@ export const checkLimitRemoved = (
 }
 
 export const getLimitSetting = async (): Promise<LimitSettingType> => {
-  const limitSetting = await storage.get(limitSettingKey)
+  const limitSetting = await storage.get(key.limitSetting())
   if (limitSetting === null || limitSetting === undefined)
     return normalLimitSetting
 
   return JSON.parse(limitSetting)
 }
 export const savetLimitSetting = async (setting: LimitSettingType) => {
-  await storage.set(limitSettingKey, JSON.stringify(setting))
+  await storage.set(key.limitSetting(), JSON.stringify(setting))
 }
 
 export const getCustomLimitSetting = async (): Promise<LimitSettingType> => {
-  const limitSetting = await storage.get(customLimitSettingKey)
+  const limitSetting = await storage.get(key.customLimitSetting())
   if (limitSetting === null || limitSetting === undefined)
     return defaultCustomLimitSetting
 
   return JSON.parse(limitSetting)
 }
 export const saveCustomLimitSetting = async (setting: LimitSettingType) => {
-  await storage.set(customLimitSettingKey, JSON.stringify(setting))
+  await storage.set(key.customLimitSetting(), JSON.stringify(setting))
 }
 
 export const getLimitSettingByDifficulty = async (
