@@ -1,9 +1,8 @@
-import { key, storage, today } from "../storage"
+import { key, storage, today, type CountStorageType } from "../storage"
 
 export const updateResponseDailyCount = async (event: string) => {
   const storageResult = (await storage.get(key.gptResponses())) as unknown
-  const allCounts =
-    (storageResult as Record<string, Record<string, number>>) ?? {}
+  const allCounts = (storageResult as CountStorageType) ?? {}
   if (allCounts[today] === undefined || allCounts[today] === null) {
     allCounts[today] = {}
   }
@@ -18,8 +17,7 @@ export const getResponseDailyCount = async (date?: string): Promise<number> => {
   const targetDate = date ?? today
 
   const storageResult = (await storage.get(key.gptResponses())) as unknown
-  const allCounts =
-    (storageResult as Record<string, Record<string, number>>) ?? {}
+  const allCounts = (storageResult as CountStorageType) ?? {}
 
   const dailyCounts = allCounts[targetDate]
 
@@ -34,12 +32,9 @@ export const getResponseDailyCount = async (date?: string): Promise<number> => {
   return totalDailyCount
 }
 
-export const getResponseAllCounts = async (): Promise<
-  Record<string, Record<string, number>>
-> => {
+export const getResponseAllCounts = async (): Promise<CountStorageType> => {
   const storageResult = (await storage.get(key.gptResponses())) as unknown
-  const allCounts =
-    (storageResult as Record<string, Record<string, number>>) ?? {}
+  const allCounts = (storageResult as CountStorageType) ?? {}
 
   return allCounts
 }

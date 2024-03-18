@@ -1,4 +1,10 @@
-import { initialData, key, storage, today } from "../storage"
+import {
+  initialData,
+  key,
+  storage,
+  today,
+  type CountStorageType
+} from "../storage"
 
 export const codeCount = {
   createStorage: async () => {
@@ -8,10 +14,9 @@ export const codeCount = {
     }
   },
   createDailyStorage: async () => {
-    const allCounts = (await storage.get(key.codeResponses())) as Record<
-      string,
-      Record<string, number>
-    >
+    const allCounts = (await storage.get(
+      key.codeResponses()
+    )) as CountStorageType
     if (allCounts[today] === undefined || allCounts[today] === null) {
       allCounts[today] = {
         "3.5": 0,
@@ -21,10 +26,9 @@ export const codeCount = {
     }
   },
   updateDaily: async (event: string) => {
-    const allCounts = (await storage.get(key.codeResponses())) as Record<
-      string,
-      Record<string, number>
-    >
+    const allCounts = (await storage.get(
+      key.codeResponses()
+    )) as CountStorageType
     allCounts[today][event] += 1
     await storage.set(key.codeResponses(), allCounts)
   }

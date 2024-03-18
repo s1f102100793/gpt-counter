@@ -8,9 +8,10 @@ import {
 } from "date-fns"
 
 import { getResponseAllCounts } from "./count/responseCount"
+import type { CountStorageType } from "./storage"
 
 const calculateStatisticsForMonth = (
-  allCounts: Record<string, Record<string, number>>,
+  allCounts: CountStorageType,
   startOfMonth: Date,
   endOfMonth: Date
 ) => {
@@ -38,7 +39,7 @@ const calculateStatisticsForMonth = (
 }
 
 export const calculateMonthlyStatistics = (
-  allCounts: Record<string, Record<string, number>>,
+  allCounts: CountStorageType,
   targetMonth: Date
 ) => {
   const startOfTargetMonth = startOfMonth(targetMonth)

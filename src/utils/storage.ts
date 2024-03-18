@@ -2,6 +2,10 @@ import { Storage } from "@plasmohq/storage"
 
 export const storage: Storage = new Storage()
 
+export interface CountStorageType {
+  [date: string]: Record<string, number>
+}
+
 export const key = {
   resetLimit: () => "resetLimit",
   limitSetting: () => "limitSetting",
