@@ -24,7 +24,7 @@ const countCodeResponseElements = async (): Promise<number> => {
         }
       })
       resolve(count)
-    }, 1000)
+    }, 3000)
   })
 }
 
@@ -34,13 +34,13 @@ const observeDOMChanges = async (): Promise<void> => {
     const mutationCallback: MutationCallback = async () => {
       const updateCount = await countCodeResponseElements()
 
-      if (updateCount - codeCurrentCount > 0) {
+      if (updateCount - codeCurrentCount === 1) {
         codeCurrentCount = updateCount
         const gptModel = document.querySelector(gptModelClassName)?.textContent
         if (gptModel === undefined || gptModel === null) {
           console.error("GPT model not found.")
         } else {
-          console.log(`${gptModel}が1回増えました`)
+          console.log(`CodeResponseが1回増えました`)
         }
       }
     }
