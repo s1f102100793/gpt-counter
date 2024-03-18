@@ -1,7 +1,7 @@
 import styleText from "data-text:./styles/headerCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
-import { getDailyCount } from "src/utils/dailyCount"
+import { getResponseDailyCount } from "src/utils/count/responseCount"
 import { headerClassName } from "src/utils/elements"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
@@ -51,7 +51,7 @@ const HeaderCurrentStatus = () => {
   }
 
   const fetchTodayCount = async () => {
-    await getDailyCount().then((count) => {
+    await getResponseDailyCount().then((count) => {
       setCount(count)
     })
   }

@@ -7,7 +7,7 @@ import {
   startOfMonth
 } from "date-fns"
 
-import { getCountData } from "./dailyCount"
+import { getResponseAllCounts } from "./count/responseCount"
 
 const calculateStatisticsForMonth = (
   allCounts: Record<string, Record<string, number>>,
@@ -72,7 +72,7 @@ export const calculateMonthlyStatistics = (
 }
 
 export const updateChartData = async (date: Date) => {
-  const allCounts = await getCountData()
+  const allCounts = await getResponseAllCounts()
   const today = new Date()
   const endOfToday = endOfDay(today)
   const startDate = startOfMonth(date)

@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-import { getDailyCount } from "src/utils/dailyCount"
+import { getResponseDailyCount } from "src/utils/count/responseCount"
 import { getLimitSetting, normalLimitSetting } from "src/utils/limitSetting"
 
 export const config: PlasmoCSConfig = {
@@ -14,7 +14,7 @@ const HidePromptTextarea = () => {
   const [url, setUrl] = useState("")
 
   const fetchTodayCount = async () => {
-    await getDailyCount().then((count) => {
+    await getResponseDailyCount().then((count) => {
       setCount(count)
     })
   }

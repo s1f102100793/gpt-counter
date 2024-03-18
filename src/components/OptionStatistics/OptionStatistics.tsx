@@ -14,7 +14,7 @@ import {
 import { addMonths, format, isAfter, isBefore, startOfMonth } from "date-fns"
 import React, { useEffect, useState } from "react"
 import { Line } from "react-chartjs-2"
-import { getCountData } from "src/utils/dailyCount"
+import { getResponseAllCounts } from "src/utils/count/responseCount"
 import { findOldestDataMonth } from "src/utils/date-fns"
 import {
   calculateMonthlyStatistics,
@@ -89,7 +89,7 @@ const OptionStatistics = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const allCounts = await getCountData()
+      const allCounts = await getResponseAllCounts()
       const stats = calculateMonthlyStatistics(allCounts, currentDate)
       setStatistics(stats)
     }

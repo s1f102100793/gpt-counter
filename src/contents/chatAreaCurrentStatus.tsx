@@ -1,7 +1,7 @@
 import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
-import { getDailyCount } from "src/utils/dailyCount"
+import { getResponseDailyCount } from "src/utils/count/responseCount"
 import { gptResponseClassName } from "src/utils/elements"
 import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
@@ -51,7 +51,7 @@ const ChatAreaCurrentStatus = () => {
     setLimitSetting(unlimitedSetting)
   }
   const fetchTodayCount = async () => {
-    await getDailyCount().then((count) => {
+    await getResponseDailyCount().then((count) => {
       setCount(count)
     })
   }

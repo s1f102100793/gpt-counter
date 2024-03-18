@@ -17,7 +17,7 @@ export const getCurrentDateInJST = (): string => {
 
 export const gptResponsesStorageKey = `gptResponses`
 
-export const updateEventCount = async (event: string) => {
+export const updateResponseDailyCount = async (event: string) => {
   const today = getCurrentDateInJST()
   const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
   const allCounts =
@@ -32,7 +32,7 @@ export const updateEventCount = async (event: string) => {
   await storage.set(gptResponsesStorageKey, allCounts)
 }
 
-export const getDailyCount = async (date?: string): Promise<number> => {
+export const getResponseDailyCount = async (date?: string): Promise<number> => {
   const targetDate = date ?? getCurrentDateInJST()
 
   const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown
@@ -52,7 +52,7 @@ export const getDailyCount = async (date?: string): Promise<number> => {
   return totalDailyCount
 }
 
-export const getCountData = async (): Promise<
+export const getResponseAllCounts = async (): Promise<
   Record<string, Record<string, number>>
 > => {
   const storageResult = (await storage.get(gptResponsesStorageKey)) as unknown

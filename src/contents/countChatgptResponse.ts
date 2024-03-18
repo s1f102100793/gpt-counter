@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { updateEventCount } from "src/utils/dailyCount"
+import { updateResponseDailyCount } from "src/utils/count/responseCount"
 import {
   gptModelClassName,
   gptResponseClassName,
@@ -37,7 +37,8 @@ const observeDOMChanges = async (): Promise<void> => {
         if (gptModel === undefined || gptModel === null) {
           console.error("GPT model not found.")
         } else {
-          await updateEventCount(gptModel)
+          console.log("GPTResponseが1回増えました")
+          await updateResponseDailyCount(gptModel)
         }
       }
     }

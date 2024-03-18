@@ -1,7 +1,7 @@
 import {
   getCurrentDateInJST,
   gptResponsesStorageKey
-} from "src/utils/dailyCount"
+} from "src/utils/count/responseCount"
 import {
   getLimitSetting,
   getLimitSettingByDifficulty,
