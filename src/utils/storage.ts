@@ -7,5 +7,6 @@ export const key = {
   limitSetting: () => "limitSetting",
   customLimitSetting: () => "customLimitSetting",
   layoutSetting: () => "layoutSetting",
-  gptResponses: () => "gptResponses"
+  gptResponses: () => "gptResponses",
+  codeResponses: () => "codeResponses"
 }

@@ -8,11 +8,14 @@ import { key, storage } from "src/utils/storage"
 
 import "@plasmohq/messaging/background"
 
+import { codeCount } from "src/utils/count/codeCount"
+
 import { startHub } from "@plasmohq/messaging/pub-sub"
 
 chrome.runtime.onInstalled.addListener(async () => {
   setResetAlarm()
   await initializeDailyCountStorage()
+  await codeCount.createStorage()
 })
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
