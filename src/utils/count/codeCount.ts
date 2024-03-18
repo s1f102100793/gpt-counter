@@ -1,9 +1,7 @@
-import { key, storage } from "../storage"
-import { getCurrentDateInJST } from "./responseCount"
+import { key, storage, today } from "../storage"
 
 export const codeCount = {
   createStorage: async () => {
-    const today = getCurrentDateInJST()
     const initialData = {
       [today]: {
         "3.5": 0,
@@ -16,7 +14,6 @@ export const codeCount = {
     }
   },
   createDailyStorage: async () => {
-    const today = getCurrentDateInJST()
     const storageResult = (await storage.get(key.codeResponses())) as unknown
     const allCounts =
       (storageResult as Record<string, Record<string, number>>) ?? {}
@@ -25,7 +22,6 @@ export const codeCount = {
     }
   },
   updateDaily: async (event: string) => {
-    const today = getCurrentDateInJST()
     const allCounts = (await storage.get(key.codeResponses())) as Record<
       string,
       Record<string, number>

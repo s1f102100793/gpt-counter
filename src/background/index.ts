@@ -1,10 +1,9 @@
-import { getCurrentDateInJST } from "src/utils/count/responseCount"
 import {
   getLimitSetting,
   getLimitSettingByDifficulty,
   savetLimitSetting
 } from "src/utils/limitSetting"
-import { key, storage } from "src/utils/storage"
+import { key, storage, today } from "src/utils/storage"
 
 import "@plasmohq/messaging/background"
 
@@ -50,7 +49,6 @@ const resetLimitSetting = async () => {
 }
 
 const initializeDailyCountStorage = async () => {
-  const today = getCurrentDateInJST()
   const initialData = { [today]: 0 }
 
   const existingData = await storage.get(key.gptResponses())
