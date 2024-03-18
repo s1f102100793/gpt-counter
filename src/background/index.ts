@@ -22,6 +22,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     await resetLimitSetting()
     chrome.alarms.clear(key.resetLimit())
     setResetAlarm()
+    await codeCount.createDailyStorage()
   }
 })
 

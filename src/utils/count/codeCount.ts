@@ -8,11 +8,16 @@ export const codeCount = {
     }
   },
   createDailyStorage: async () => {
-    const storageResult = (await storage.get(key.codeResponses())) as unknown
-    const allCounts =
-      (storageResult as Record<string, Record<string, number>>) ?? {}
+    const allCounts = (await storage.get(key.codeResponses())) as Record<
+      string,
+      Record<string, number>
+    >
     if (allCounts[today] === undefined || allCounts[today] === null) {
-      allCounts[today] = {}
+      allCounts[today] = {
+        "3.5": 0,
+        "4": 0
+      }
+      await storage.set(key.codeResponses(), allCounts)
     }
   },
   updateDaily: async (event: string) => {
@@ -20,12 +25,6 @@ export const codeCount = {
       string,
       Record<string, number>
     >
-    if (allCounts[today] === undefined || allCounts[today] === null) {
-      allCounts[today] = {}
-    }
-    if (!allCounts[today][event]) {
-      allCounts[today][event] = 0
-    }
     allCounts[today][event] += 1
     await storage.set(key.codeResponses(), allCounts)
   }
