@@ -24,3 +24,10 @@ const CurrentDateInJST = (): string => {
   return `${year}-${month}-${day}`
 }
 export const today = CurrentDateInJST()
+
+export const initialData = {
+  [today]: {
+    "3.5": 0,
+    "4": 0
+  }
+}

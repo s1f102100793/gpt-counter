@@ -1,13 +1,7 @@
-import { key, storage, today } from "../storage"
+import { initialData, key, storage, today } from "../storage"
 
 export const codeCount = {
   createStorage: async () => {
-    const initialData = {
-      [today]: {
-        "3.5": 0,
-        "4": 0
-      }
-    }
     const existingData = await storage.get(key.codeResponses())
     if (existingData !== null && existingData !== undefined) {
       await storage.set(key.codeResponses(), initialData)
