@@ -1,7 +1,12 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
+import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
 import { getResponseDailyCount } from "src/utils/count/responseCount"
-import { getLimitSetting, normalLimitSetting } from "src/utils/limitSetting"
+import {
+  getLimitSetting,
+  normalLimitSetting,
+  type LimitSettingType
+} from "src/utils/limitSetting"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -10,17 +15,22 @@ export const config: PlasmoCSConfig = {
 
 const HidePromptTextarea = () => {
   const [count, setCount] = useState(0)
-  const [limit, serLimit] = useState(normalLimitSetting.limit)
+  const [codeCount, setCodeCount] = useState(0)
+  const [limitSetting, setLimitSetting] =
+    useState<LimitSettingType>(normalLimitSetting)
   const [url, setUrl] = useState("")
 
   const fetchTodayCount = async () => {
     await getResponseDailyCount().then((count) => {
       setCount(count)
     })
+    await codeCountUtils.getDaily().then((count) => {
+      setCodeCount(count)
+    })
   }
   const fetchLimitSetting = async () => {
     await getLimitSetting().then((setting) => {
-      serLimit(setting.limit)
+      setLimitSetting(setting)
     })
   }
   useEffect(() => {
@@ -39,17 +49,30 @@ const HidePromptTextarea = () => {
   })
 
   useEffect(() => {
-    const remainingCounts = limit - count
+    const remainingCounts = limitSetting.limit - count
+    const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
+    // eslint-disable-next-line complexity
     setTimeout(() => {
       const textarea = document.getElementById("prompt-textarea")
       if (!textarea) return
-      if (remainingCounts <= 0) {
+      if (
+        (remainingCounts <= 0 && limitSetting.isCountOnly === false) ||
+        (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
+      ) {
         textarea.style.setProperty("display", "none", "important")
       } else {
         textarea.style.setProperty("display", "block", "important")
       }
     }, 100)
-  }, [count, limit, url])
+  }, [
+    count,
+    codeCount,
+    url,
+    limitSetting.limit,
+    limitSetting.codeLimit,
+    limitSetting.isCountOnly,
+    limitSetting.isCodeLimit
+  ])
 
   return null
 }
