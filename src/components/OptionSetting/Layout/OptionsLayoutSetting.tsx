@@ -1,9 +1,11 @@
 import { FormControlLabel } from "@mui/material"
 import { useEffect, useState } from "react"
+import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
+import { changeSettingAlert } from "src/utils/alert"
 import {
   defaultLayoutSetting,
   getLayoutSetting,
-  saveLayoutSetting,
+  saveLayoutSetting as saveLayout,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
@@ -35,7 +37,6 @@ const OptionsLayoutSetting = () => {
   const handleSwitchChange = async (settingName: string, checked: boolean) => {
     const updatedSetting = { ...layoutSetting, [settingName]: checked }
     setLayoutSetting(updatedSetting)
-    await saveLayoutSetting(updatedSetting)
   }
   const handleCustomSwithChange = async () => {
     const newContent =
@@ -46,7 +47,11 @@ const OptionsLayoutSetting = () => {
     }
     setDisplayCount(newContent)
     setLayoutSetting(updatedSetting)
-    await saveLayoutSetting(updatedSetting)
+  }
+  const saveLayoutSetting = async () => {
+    const userConfirmed = await changeSettingAlert()
+    if (!userConfirmed) return
+    await saveLayout(layoutSetting)
   }
 
   const fetchLayoutSetting = async () => {
@@ -132,6 +137,7 @@ const OptionsLayoutSetting = () => {
               </div>
             </>
           )}
+        <ChangeButton onClick={saveLayoutSetting} />
       </div>
     </div>
   )
