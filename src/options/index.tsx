@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import CustomDrawer from "src/components/CustomDrawer"
 import OptionsContent from "src/components/OptionsContent"
 
-const drawerWidth = 240
+const drawerWidth = 280
 
 function OptionsIndex() {
   const [selectedItem, setSelectedItem] = useState("statistics")

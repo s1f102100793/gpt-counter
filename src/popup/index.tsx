@@ -1,5 +1,6 @@
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined"
 import { FormControlLabel } from "@mui/material"
+import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import {
@@ -76,7 +77,10 @@ const Popup = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.appName}>GPT-Counter</div>
+        <div className={styles.appName}>
+          <img src={settingIcon} style={{ width: "24px", height: "24px" }} />
+          <p>GPT-Counter</p>
+        </div>
         <SettingsOutlinedIcon
           className={styles.settingIcon}
           onClick={navigateToSettings}

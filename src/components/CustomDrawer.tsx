@@ -9,6 +9,7 @@ import {
   Toolbar,
   Typography
 } from "@mui/material"
+import settingIcon from "data-base64:~/assets/settingIcon.png"
 
 interface CustomDrawerProps {
   onSelect: (value: string) => void
@@ -23,7 +24,8 @@ const CustomDrawer = ({ onSelect, selectedValue }: CustomDrawerProps) => {
 
   return (
     <div style={{ backgroundColor: "#f1f1f1", minHeight: "100vh" }}>
-      <Toolbar>
+      <Toolbar style={{ gap: "16px", height: "96px" }}>
+        <img src={settingIcon} style={{ width: "56px" }} />
         <Typography variant="h6" component="div" sx={{ fontSize: "24px" }}>
           GPT-Counter
         </Typography>
