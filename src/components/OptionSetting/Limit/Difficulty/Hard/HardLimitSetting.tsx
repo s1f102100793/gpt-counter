@@ -1,3 +1,4 @@
+import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import styles from "../Difficulty.module.css"
 import type { DifficultyLimitSettingProps } from "../Easy/EasyLimitSetting"
 
@@ -9,13 +10,7 @@ const HardLimitSetting: React.FC<DifficultyLimitSettingProps> = ({
       <ul>
         <li>質問可能回数:5回</li>
       </ul>
-      <div className={styles.buttonContainer}>
-        <button
-          onClick={() => handleDifficultyChange("hard")}
-          className={styles.changeButton}>
-          この設定に変更
-        </button>
-      </div>
+      <ChangeButton onClick={() => handleDifficultyChange("hard")} />
     </div>
   )
 }

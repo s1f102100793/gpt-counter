@@ -1,5 +1,6 @@
 import { FormControlLabel } from "@mui/material"
 import React, { useEffect, useState } from "react"
+import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import { changeSettingAlert } from "src/utils/alert"
 import {
@@ -115,13 +116,7 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
           </li>
         )}
       </ul>
-      <div className={styles.buttonContainer}>
-        <button
-          onClick={() => changeToCustomLimitSetting()}
-          className={styles.changeButton}>
-          この設定に変更
-        </button>
-      </div>
+      <ChangeButton onClick={changeToCustomLimitSetting} />
     </div>
   )
 }
