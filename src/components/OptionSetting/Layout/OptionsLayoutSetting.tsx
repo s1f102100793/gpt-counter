@@ -16,7 +16,7 @@ const OptionsLayoutSetting = () => {
   const translateSettingName = (settingName: string): string => {
     const nameMap: Record<string, string> = {
       afterGptResponse: "GPTレスポンス後に残り回数を表示をする。",
-      header: "ヘッダーに表示に残り回数を表示する。"
+      header: "ヘッダーに残り回数を表示する。"
     }
     return nameMap[settingName] || settingName
   }
