@@ -13,14 +13,11 @@ export const updateResponseDailyCount = async (event: string) => {
   await storage.set(key.gptResponses(), allCounts)
 }
 
-export const getResponseDailyCount = async (date?: string): Promise<number> => {
-  const targetDate = date ?? today
-
+export const getResponseDailyCount = async (): Promise<number> => {
   const storageResult = (await storage.get(key.gptResponses())) as unknown
   const allCounts = (storageResult as CountStorageType) ?? {}
 
-  const dailyCounts = allCounts[targetDate]
-
+  const dailyCounts = allCounts[today]
   let totalDailyCount = 0
   if (dailyCounts !== undefined && dailyCounts !== null) {
     totalDailyCount = Object.values(dailyCounts).reduce(

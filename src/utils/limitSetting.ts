@@ -40,7 +40,8 @@ export const checkLimitRemoved = (
     return {
       ...copySetting,
       isLimitRemoved: true,
-      limit: Number.MAX_SAFE_INTEGER
+      limit: Number.MAX_SAFE_INTEGER,
+      codeLimit: Number.MAX_SAFE_INTEGER
     }
   }
   return copySetting

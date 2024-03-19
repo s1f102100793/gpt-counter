@@ -25,6 +25,12 @@ export const codeCount = {
       await storage.set(key.codeResponses(), allCounts)
     }
   },
+  getDaily: async (): Promise<number> => {
+    const allCounts = (await storage.get(
+      key.codeResponses()
+    )) as CountStorageType
+    return allCounts[today]["3.5"] + allCounts[today]["4"]
+  },
   updateDaily: async (event: string) => {
     const allCounts = (await storage.get(
       key.codeResponses()

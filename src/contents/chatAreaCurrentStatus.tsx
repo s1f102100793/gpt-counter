@@ -1,9 +1,14 @@
 import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useState } from "react"
+import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
 import { getResponseDailyCount } from "src/utils/count/responseCount"
 import { gptResponseClassName } from "src/utils/elements"
-import { getLayoutSetting } from "src/utils/layoutSetting"
+import {
+  defaultLayoutSetting,
+  getLayoutSetting,
+  type LayoutSettingType
+} from "src/utils/layoutSetting"
 import {
   getLimitSetting,
   normalLimitSetting,
@@ -34,18 +39,23 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 
 export const getShadowHostId = () => "chatarea-current-status"
 
+// eslint-disable-next-line complexity
 const ChatAreaCurrentStatus = () => {
   const [count, setCount] = useState(0)
-  const [isLayoutDisplay, setLayoutDisplay] = useState(false)
+  const [codeCount, setCodeCount] = useState(0)
+  const [layoutSetting, setLayoutSetting] =
+    useState<LayoutSettingType>(defaultLayoutSetting)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
   const remainingCounts = limitSetting.limit - count
+  const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
 
   const removeLimit = async () => {
     const unlimitedSetting = {
       ...limitSetting,
       isLimitRemoved: true,
-      limit: Number.MAX_SAFE_INTEGER
+      limit: Number.MAX_SAFE_INTEGER,
+      codeLimit: Number.MAX_SAFE_INTEGER
     }
     await savetLimitSetting(unlimitedSetting)
     setLimitSetting(unlimitedSetting)
@@ -54,10 +64,13 @@ const ChatAreaCurrentStatus = () => {
     await getResponseDailyCount().then((count) => {
       setCount(count)
     })
+    await codeCountUtils.getDaily().then((count) => {
+      setCodeCount(count)
+    })
   }
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
-      setLayoutDisplay(setting.afterGptResponse)
+      setLayoutSetting(setting)
     })
   }
   const fetchLimitSetting = async () => {
@@ -80,7 +93,6 @@ const ChatAreaCurrentStatus = () => {
     fetchLayoutSetting()
     fetchLimitSetting()
   }, [])
-
   chrome.storage.onChanged.addListener(() => {
     fetchTodayCount()
     fetchLayoutSetting()
@@ -88,28 +100,61 @@ const ChatAreaCurrentStatus = () => {
   })
 
   if (
-    !isLayoutDisplay ||
-    limitSetting.isLimitRemoved ||
-    limitSetting?.isCountOnly === true
+    layoutSetting.afterGptResponse === false ||
+    limitSetting.isLimitRemoved === true
   )
     return null
 
-  return (
-    <div className={styles.statusContainer}>
-      {remainingCounts > 0 ? (
-        <div className={styles.container}>
-          <div className={styles.content}>
-            本日の残り回数は{remainingCounts}回です。
-          </div>
-        </div>
-      ) : (
+  if (remainingCounts <= 0) {
+    return (
+      <div className={styles.statusContainer}>
         <div className={styles.alertContainer}>
-          <div className={styles.content}>本日は使用できません</div>
+          <div className={styles.content}>
+            質問数の制限になりました。本日は使用できません。
+          </div>
           <button onClick={removeLimit} className={styles.removeLimitButton}>
             今日は制限を無くす。
           </button>
         </div>
-      )}
+      </div>
+    )
+  }
+  if (codeRemainingCounts <= 0) {
+    return (
+      <div className={styles.statusContainer}>
+        <div className={styles.alertContainer}>
+          <div className={styles.content}>
+            コードの出力数が制限に達しました。本日は使用できません。
+          </div>
+          <button onClick={removeLimit} className={styles.removeLimitButton}>
+            今日は制限を無くす。
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (
+    layoutSetting.content === "codeCount" &&
+    limitSetting.difficulty === "custom"
+  ) {
+    return (
+      <div className={styles.statusContainer}>
+        <div className={styles.container}>
+          <div className={styles.content}>
+            本日の残りコードの出力回数は{codeRemainingCounts}回です。
+          </div>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className={styles.statusContainer}>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          本日の残り質問可能回数は{remainingCounts}回です。
+        </div>
+      </div>
     </div>
   )
 }
