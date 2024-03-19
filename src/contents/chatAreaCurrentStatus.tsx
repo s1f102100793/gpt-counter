@@ -142,7 +142,7 @@ const ChatAreaCurrentStatus = () => {
       <div className={styles.statusContainer}>
         <div className={styles.container}>
           <div className={styles.content}>
-            本日の残りコードの出力回数は{codeRemainingCounts}回です。
+            本日の残りコード出力回数は{codeRemainingCounts}回です。
           </div>
         </div>
       </div>

@@ -1,9 +1,14 @@
 import styleText from "data-text:./styles/headerCurrentStatus.module.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
+import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
 import { getResponseDailyCount } from "src/utils/count/responseCount"
 import { headerClassName } from "src/utils/elements"
-import { getLayoutSetting } from "src/utils/layoutSetting"
+import {
+  defaultLayoutSetting,
+  getLayoutSetting,
+  type LayoutSettingType
+} from "src/utils/layoutSetting"
 import {
   getLimitSetting,
   normalLimitSetting,
@@ -31,19 +36,24 @@ export const getStyle = () => {
 
 export const getShadowHostId = () => "header-current-status"
 
+// eslint-disable-next-line complexity
 const HeaderCurrentStatus = () => {
   const [count, setCount] = useState(0)
-  const [isLayoutDisplay, setLayoutDisplay] = useState(false)
+  const [codeCount, setCodeCount] = useState(0)
+  const [layoutSetting, setLayoutSetting] =
+    useState<LayoutSettingType>(defaultLayoutSetting)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
   const remainingCounts = limitSetting.limit - count
+  const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
 
   const removeLimit = async () => {
     if (window.confirm("本日の制限を解除しますか？")) {
       const unlimitedSetting = {
         ...limitSetting,
         isLimitRemoved: true,
-        limit: Number.MAX_SAFE_INTEGER
+        limit: Number.MAX_SAFE_INTEGER,
+        codeLimit: Number.MAX_SAFE_INTEGER
       }
       setLimitSetting(unlimitedSetting)
       await saveLimitSetting(unlimitedSetting)
@@ -54,10 +64,13 @@ const HeaderCurrentStatus = () => {
     await getResponseDailyCount().then((count) => {
       setCount(count)
     })
+    await codeCountUtils.getDaily().then((count) => {
+      setCodeCount(count)
+    })
   }
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
-      setLayoutDisplay(setting.header)
+      setLayoutSetting(setting)
     })
   }
   const fetchLimitSetting = async () => {
@@ -78,22 +91,38 @@ const HeaderCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (
-    !isLayoutDisplay ||
-    limitSetting.isLimitRemoved ||
-    limitSetting?.isCountOnly === true
-  )
+  if (layoutSetting.header === false || limitSetting.isLimitRemoved === true)
     return null
+  if (remainingCounts <= 0)
+    return (
+      <div className={styles.container}>
+        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
+          質問数の制限になりました。本日は使用できません。
+        </div>
+      </div>
+    )
+  if (codeRemainingCounts <= 0)
+    return (
+      <div className={styles.container}>
+        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
+          コードの出力数が制限に達しました。本日は使用できません。
+        </div>
+      </div>
+    )
 
+  if (
+    layoutSetting.content === "codeCount" &&
+    limitSetting.difficulty === "custom"
+  ) {
+    return (
+      <div className={styles.container}>
+        本日の残りコード出力回数は{codeRemainingCounts}回です。
+      </div>
+    )
+  }
   return (
     <div className={styles.container}>
-      {remainingCounts > 0 ? (
-        `本日の残り回数は${remainingCounts}回です。`
-      ) : (
-        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
-          本日は使用できません
-        </div>
-      )}
+      本日の残り質問可能回数は{remainingCounts}回です。
     </div>
   )
 }
