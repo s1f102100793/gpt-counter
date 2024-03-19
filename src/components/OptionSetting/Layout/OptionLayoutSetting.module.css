@@ -20,10 +20,23 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 600px;
+  width: 512px;
   height: 100%;
-  border-bottom: 1px solid #e0e0e0;
   padding: 4px;
+  margin-left: 32px;
+}
+
+.contentLabel::before {
+  content: "";
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 2px;
+  margin-left: -14px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: black;
+  align-self: center;
 }
 
 .contentLabel {
