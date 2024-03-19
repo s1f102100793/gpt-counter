@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import {
   defaultLayoutSetting,
   getLayoutSetting,
-  savetLayoutSetting,
+  saveLayoutSetting,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
@@ -35,7 +35,7 @@ const OptionsLayoutSetting = () => {
   const handleSwitchChange = async (settingName: string, checked: boolean) => {
     const updatedSetting = { ...layoutSetting, [settingName]: checked }
     setLayoutSetting(updatedSetting)
-    await savetLayoutSetting(updatedSetting)
+    await saveLayoutSetting(updatedSetting)
   }
   const handleCustomSwithChange = async () => {
     const newContent =
@@ -46,12 +46,13 @@ const OptionsLayoutSetting = () => {
     }
     setDisplayCount(newContent)
     setLayoutSetting(updatedSetting)
-    await savetLayoutSetting(updatedSetting)
+    await saveLayoutSetting(updatedSetting)
   }
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutSetting(setting)
+      setDisplayCount(setting.content)
     })
   }
   const fetchLimitSetting = async () => {

@@ -20,6 +20,6 @@ export const getLayoutSetting = async () => {
   return JSON.parse(layoutSetting)
 }
 
-export const savetLayoutSetting = async (setting: LayoutSettingType) => {
+export const saveLayoutSetting = async (setting: LayoutSettingType) => {
   await storage.set(key.layoutSetting(), JSON.stringify(setting))
 }
