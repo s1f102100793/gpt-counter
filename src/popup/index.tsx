@@ -5,7 +5,8 @@ import { IOSSwitch } from "src/components/mui/IosSwitch"
 import {
   defaultLayoutSetting,
   getLayoutSetting,
-  savetLayoutSetting
+  savetLayoutSetting,
+  type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
   checkLimitRemoved,
@@ -20,7 +21,7 @@ import styles from "./index.module.css"
 
 const Popup = () => {
   const [layoutSetting, setLayoutSetting] =
-    useState<Record<string, boolean>>(defaultLayoutSetting)
+    useState<LayoutSettingType>(defaultLayoutSetting)
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
 
@@ -93,26 +94,31 @@ const Popup = () => {
           <option value="custom">カスタム</option>
         </select>
       </div>
-      {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
-        <div key={settingName} className={styles.layoutOption}>
-          <div className={styles.layoutOptionLabel}>
-            {translateSettingName(settingName)}
-          </div>
-          <FormControlLabel
-            control={
-              <IOSSwitch
-                sx={{ m: 1 }}
-                checked={isEnabled}
-                onChange={(e) =>
-                  handleSwitchChange(settingName, e.target.checked)
+      {Object.entries(layoutSetting).map(([settingName, isEnabled]) => {
+        if (settingName === "afterGptResponse" || settingName === "header") {
+          return (
+            <div key={settingName} className={styles.layoutOption}>
+              <div className={styles.layoutOptionLabel}>
+                {translateSettingName(settingName)}
+              </div>
+              <FormControlLabel
+                control={
+                  <IOSSwitch
+                    sx={{ m: 1 }}
+                    checked={Boolean(isEnabled)}
+                    onChange={(e) =>
+                      handleSwitchChange(settingName, e.target.checked)
+                    }
+                  />
                 }
+                label=""
+                labelPlacement="start"
               />
-            }
-            label=""
-            labelPlacement="start"
-          />
-        </div>
-      ))}
+            </div>
+          )
+        }
+        return null
+      })}
     </div>
   )
 }

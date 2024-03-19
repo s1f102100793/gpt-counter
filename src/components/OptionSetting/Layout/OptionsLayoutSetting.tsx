@@ -3,15 +3,26 @@ import { useEffect, useState } from "react"
 import {
   defaultLayoutSetting,
   getLayoutSetting,
-  savetLayoutSetting
+  savetLayoutSetting,
+  type LayoutSettingType
 } from "src/utils/layoutSetting"
+import {
+  getLimitSetting,
+  normalLimitSetting,
+  type LimitSettingType
+} from "src/utils/limitSetting"
 
 import { IOSSwitch } from "../../mui/IosSwitch"
 import styles from "./OptionLayoutSetting.module.css"
 
 const OptionsLayoutSetting = () => {
   const [layoutSetting, setLayoutSetting] =
-    useState<Record<string, boolean>>(defaultLayoutSetting)
+    useState<LayoutSettingType>(defaultLayoutSetting)
+  const [limitSetting, setLimitSetting] =
+    useState<LimitSettingType>(normalLimitSetting)
+  const [customDisplayCount, setDisplayCount] = useState<
+    "responseCount" | "codeCount"
+  >("responseCount")
 
   const translateSettingName = (settingName: string): string => {
     const nameMap: Record<string, string> = {
@@ -26,43 +37,100 @@ const OptionsLayoutSetting = () => {
     setLayoutSetting(updatedSetting)
     await savetLayoutSetting(updatedSetting)
   }
+  const handleCustomSwithChange = async () => {
+    const newContent =
+      customDisplayCount === "responseCount" ? "codeCount" : "responseCount"
+    const updatedSetting: LayoutSettingType = {
+      ...layoutSetting,
+      content: newContent
+    }
+    setDisplayCount(newContent)
+    setLayoutSetting(updatedSetting)
+    await savetLayoutSetting(updatedSetting)
+  }
 
   const fetchLayoutSetting = async () => {
     await getLayoutSetting().then((setting) => {
       setLayoutSetting(setting)
     })
   }
+  const fetchLimitSetting = async () => {
+    await getLimitSetting().then((setting) => {
+      setLimitSetting(setting)
+    })
+  }
   useEffect(() => {
     fetchLayoutSetting()
+    fetchLimitSetting()
   }, [])
   chrome.storage.onChanged.addListener(() => {
     fetchLayoutSetting()
+    fetchLimitSetting()
   })
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>レイアウト設定</div>
       <div>
-        {Object.entries(layoutSetting).map(([settingName, isEnabled]) => (
-          <div key={settingName} className={styles.content}>
-            <div className={styles.contentLabel}>
-              {translateSettingName(settingName)}
-            </div>
-            <FormControlLabel
-              control={
-                <IOSSwitch
-                  sx={{ m: 1 }}
-                  checked={isEnabled}
-                  onChange={(e) =>
-                    handleSwitchChange(settingName, e.target.checked)
+        {Object.entries(layoutSetting).map(([settingName, isEnabled]) => {
+          if (settingName !== "content") {
+            return (
+              <div key={settingName} className={styles.content}>
+                <div className={styles.contentLabel}>
+                  {translateSettingName(settingName)}
+                </div>
+                <FormControlLabel
+                  control={
+                    <IOSSwitch
+                      sx={{ m: 1 }}
+                      checked={Boolean(isEnabled)}
+                      onChange={(e) =>
+                        handleSwitchChange(settingName, e.target.checked)
+                      }
+                    />
                   }
+                  label=""
+                  labelPlacement="start"
                 />
-              }
-              label=""
-              labelPlacement="start"
-            />
-          </div>
-        ))}
+              </div>
+            )
+          }
+        })}
+        {limitSetting.isCountOnly === false &&
+          limitSetting.isCodeLimit === true && (
+            <>
+              <div className={styles.content}>
+                <div className={styles.contentLabel}>残り質問数を表示する</div>
+                <FormControlLabel
+                  control={
+                    <IOSSwitch
+                      sx={{ m: 1 }}
+                      checked={customDisplayCount === "responseCount"}
+                      onChange={() => handleCustomSwithChange()}
+                    />
+                  }
+                  label=""
+                  labelPlacement="start"
+                />
+              </div>
+              <div className={styles.content}>
+                <div className={styles.contentLabel}>
+                  残りコード回答数を表示する
+                </div>
+                <FormControlLabel
+                  control={
+                    <IOSSwitch
+                      sx={{ m: 1 }}
+                      checked={customDisplayCount === "codeCount"}
+                      onChange={() => handleCustomSwithChange()}
+                    />
+                  }
+                  label=""
+                  labelPlacement="start"
+                />
+              </div>
+            </>
+          )}
       </div>
     </div>
   )
