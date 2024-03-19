@@ -5,6 +5,8 @@ export type LimitSettingType = {
   limit: number
   isLimitRemoved: boolean
   isCountOnly?: boolean
+  isCodeLimit?: boolean
+  codeLimit?: number
 }
 export const easyLimitSetting: LimitSettingType = {
   difficulty: "easy",
@@ -25,7 +27,9 @@ export const defaultCustomLimitSetting: LimitSettingType = {
   difficulty: "custom",
   limit: 10,
   isLimitRemoved: false,
-  isCountOnly: false
+  isCountOnly: false,
+  isCodeLimit: false,
+  codeLimit: 10
 } as const
 
 export const checkLimitRemoved = (

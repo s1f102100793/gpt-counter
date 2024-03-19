@@ -22,8 +22,15 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
 }) => {
   const [isCountOnly, setIsCountOnly] = useState<boolean>(false)
   const [limit, setLimit] = useState<number>(0)
+  const [isCodeLimit, setIsCodeLimit] = useState<boolean>(false)
+  const [codeLimit, setCodeLimit] = useState<number>(0)
   const handleChangeLimit = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLimit(Number(event.target.value))
+  }
+  const handleChangeCodeLimit = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCodeLimit(Number(event.target.value))
   }
   const changeToCustomLimitSetting = async () => {
     const userConfirmed = await changeSettingAlert()
@@ -32,7 +39,9 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     let newSetting: LimitSettingType = {
       ...CustomLimitSetting,
       limit,
-      isCountOnly
+      isCountOnly,
+      isCodeLimit,
+      codeLimit
     }
     await saveCustomLimitSetting(newSetting)
     newSetting = checkLimitRemoved(limitSetting, newSetting)
@@ -44,6 +53,8 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     await getCustomLimitSetting().then((setting) => {
       setLimit(setting.limit)
       setIsCountOnly(setting.isCountOnly as boolean)
+      setIsCodeLimit(setting.isCodeLimit as boolean)
+      setCodeLimit(setting.codeLimit as number)
     })
   }
   useEffect(() => {
@@ -75,6 +86,31 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
               type="number"
               value={limit}
               onChange={handleChangeLimit}
+            />
+          </li>
+        )}
+        <li className={styles.content}>
+          <div className={styles.divWithMarker}>コード回答数の制限をかける</div>
+          <FormControlLabel
+            sx={{ marginRight: "2px" }}
+            control={
+              <IOSSwitch
+                checked={isCodeLimit}
+                onChange={() => setIsCodeLimit(!isCodeLimit)}
+              />
+            }
+            label=""
+            labelPlacement="start"
+          />
+        </li>
+        {isCodeLimit === true && (
+          <li className={styles.content}>
+            <div className={styles.divWithMarker}>コードの制限回数:</div>
+            <input
+              className={styles.limitInput}
+              type="number"
+              value={codeLimit}
+              onChange={handleChangeCodeLimit}
             />
           </li>
         )}
