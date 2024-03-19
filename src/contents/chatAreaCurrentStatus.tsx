@@ -12,7 +12,7 @@ import {
 import {
   getLimitSetting,
   normalLimitSetting,
-  savetLimitSetting,
+  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -57,7 +57,7 @@ const ChatAreaCurrentStatus = () => {
       limit: Number.MAX_SAFE_INTEGER,
       codeLimit: Number.MAX_SAFE_INTEGER
     }
-    await savetLimitSetting(unlimitedSetting)
+    await saveLimitSetting(unlimitedSetting)
     setLimitSetting(unlimitedSetting)
   }
   const fetchTodayCount = async () => {

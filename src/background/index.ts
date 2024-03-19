@@ -1,7 +1,7 @@
 import {
   getLimitSetting,
   getLimitSettingByDifficulty,
-  savetLimitSetting
+  saveLimitSetting
 } from "src/utils/limitSetting"
 import { key, storage, today } from "src/utils/storage"
 
@@ -46,7 +46,7 @@ const resetLimitSetting = async () => {
     previousSetting.difficulty
   )
   if (defaultSetting === undefined) return
-  await savetLimitSetting(defaultSetting)
+  await saveLimitSetting(defaultSetting)
 }
 
 const initializeDailyCountStorage = async () => {

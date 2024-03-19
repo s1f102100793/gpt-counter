@@ -7,7 +7,7 @@ import {
   checkLimitRemoved,
   getCustomLimitSetting,
   saveCustomLimitSetting,
-  savetLimitSetting,
+  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -47,7 +47,7 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     await saveCustomLimitSetting(newSetting)
     newSetting = checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
-    await savetLimitSetting(newSetting)
+    await saveLimitSetting(newSetting)
   }
 
   const fetchCustomLimitSetting = async () => {

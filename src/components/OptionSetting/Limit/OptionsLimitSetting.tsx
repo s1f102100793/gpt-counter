@@ -7,7 +7,7 @@ import {
   getLimitSettingByDifficulty,
   getValueByLimitSetting,
   normalLimitSetting,
-  savetLimitSetting,
+  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -36,7 +36,7 @@ const OptionsLimitSetting = () => {
     newSetting = checkLimitRemoved(limitSetting, newSetting)
     setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)
-    await savetLimitSetting(newSetting)
+    await saveLimitSetting(newSetting)
   }
 
   const fetchLimitSetting = async () => {

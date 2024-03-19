@@ -54,7 +54,7 @@ export const getLimitSetting = async (): Promise<LimitSettingType> => {
 
   return JSON.parse(limitSetting)
 }
-export const savetLimitSetting = async (setting: LimitSettingType) => {
+export const saveLimitSetting = async (setting: LimitSettingType) => {
   await storage.set(key.limitSetting(), JSON.stringify(setting))
 }
 

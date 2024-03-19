@@ -14,7 +14,7 @@ import {
   getLimitSetting,
   getLimitSettingByDifficulty,
   normalLimitSetting,
-  savetLimitSetting,
+  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -65,7 +65,7 @@ const Popup = () => {
     if (newSetting === undefined) return
     newSetting = checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
-    await savetLimitSetting(newSetting)
+    await saveLimitSetting(newSetting)
   }
 
   const fetchLayoutSetting = async () => {

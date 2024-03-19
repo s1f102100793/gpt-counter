@@ -7,7 +7,7 @@ import { getLayoutSetting } from "src/utils/layoutSetting"
 import {
   getLimitSetting,
   normalLimitSetting,
-  savetLimitSetting,
+  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -46,7 +46,7 @@ const HeaderCurrentStatus = () => {
         limit: Number.MAX_SAFE_INTEGER
       }
       setLimitSetting(unlimitedSetting)
-      await savetLimitSetting(unlimitedSetting)
+      await saveLimitSetting(unlimitedSetting)
     }
   }
 
