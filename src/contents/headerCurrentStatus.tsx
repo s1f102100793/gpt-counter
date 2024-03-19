@@ -91,9 +91,13 @@ const HeaderCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (layoutSetting.header === false || limitSetting.isLimitRemoved === true)
+  if (
+    layoutSetting.header === false ||
+    limitSetting.isLimitRemoved === true ||
+    (limitSetting.isCountOnly === true && limitSetting.isCodeLimit === false)
+  )
     return null
-  if (remainingCounts <= 0)
+  if (remainingCounts <= 0 && limitSetting.isCountOnly === false)
     return (
       <div className={styles.container}>
         <div onClick={removeLimit} style={{ cursor: "pointer" }}>
@@ -101,7 +105,7 @@ const HeaderCurrentStatus = () => {
         </div>
       </div>
     )
-  if (codeRemainingCounts <= 0)
+  if (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
     return (
       <div className={styles.container}>
         <div onClick={removeLimit} style={{ cursor: "pointer" }}>
@@ -111,8 +115,11 @@ const HeaderCurrentStatus = () => {
     )
 
   if (
-    layoutSetting.content === "codeCount" &&
-    limitSetting.difficulty === "custom"
+    (layoutSetting.content === "codeCount" &&
+      limitSetting.difficulty === "custom" &&
+      limitSetting.isCodeLimit === true) ||
+    (layoutSetting.content === "responseCount" &&
+      limitSetting.isCountOnly === true)
   ) {
     return (
       <div className={styles.container}>
