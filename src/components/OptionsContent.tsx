@@ -12,14 +12,14 @@ const OptionsContent = ({ selectedItem }: OptionsContentProps) => {
   return (
     <div>
       {selectedItem === "statistics" ? (
-        <Typography>
+        <div>
           <OptionStatistics />
-        </Typography>
+        </div>
       ) : selectedItem === "general" ? (
-        <Typography>
+        <div>
           <OptionsLimitSetting />
           <OptionsLayoutSetting />
-        </Typography>
+        </div>
       ) : (
         <Typography>選択された項目がありません</Typography>
       )}
