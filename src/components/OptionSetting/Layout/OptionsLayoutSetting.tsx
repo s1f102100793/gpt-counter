@@ -8,7 +8,7 @@ import {
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
-  getLimitSetting,
+  limitSetting as limitUtils,
   normalLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
@@ -60,7 +60,7 @@ const OptionsLayoutSetting = () => {
     })
   }
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
   }

@@ -10,9 +10,8 @@ import {
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
-  getLimitSetting,
+  limitSetting as limitUtils,
   normalLimitSetting,
-  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
@@ -57,7 +56,7 @@ const ChatAreaCurrentStatus = () => {
       limit: Number.MAX_SAFE_INTEGER,
       codeLimit: Number.MAX_SAFE_INTEGER
     }
-    await saveLimitSetting(unlimitedSetting)
+    await limitUtils.save(unlimitedSetting)
     setLimitSetting(unlimitedSetting)
   }
   const fetchTodayCount = async () => {
@@ -74,7 +73,7 @@ const ChatAreaCurrentStatus = () => {
     })
   }
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
   }

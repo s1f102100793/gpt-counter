@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
 import { responseCount } from "src/utils/count/responseCount"
 import {
-  getLimitSetting,
+  limitSetting as limitUtils,
   normalLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
@@ -34,7 +34,7 @@ const HidePromptTextarea = () => {
     })
   }
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
   }

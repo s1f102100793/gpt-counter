@@ -2,12 +2,10 @@ import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { changeSettingAlert } from "src/utils/alert"
 import {
-  checkLimitRemoved,
-  getLimitSetting,
   getLimitSettingByDifficulty,
   getValueByLimitSetting,
+  limitSetting as limitUtils,
   normalLimitSetting,
-  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -33,14 +31,14 @@ const OptionsLimitSetting = () => {
     if (!userConfirmed) return
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
-    newSetting = checkLimitRemoved(limitSetting, newSetting)
+    newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)
-    await saveLimitSetting(newSetting)
+    await limitUtils.save(newSetting)
   }
 
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setValue(getValueByLimitSetting(setting))
       setLimitSetting(setting)
     })

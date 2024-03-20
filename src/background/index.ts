@@ -1,7 +1,6 @@
 import {
-  getLimitSetting,
   getLimitSettingByDifficulty,
-  saveLimitSetting
+  limitSetting
 } from "src/utils/limitSetting"
 import { key } from "src/utils/storage"
 
@@ -20,6 +19,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await responseCount.createStorage()
     await codeCount.createStorage()
     await layoutSetting.createStorage()
+    await limitSetting.createStorage()
   }
 })
 
@@ -48,12 +48,12 @@ const setResetAlarm = () => {
 }
 
 const resetLimitSetting = async () => {
-  const previousSetting = await getLimitSetting()
+  const previousSetting = await limitSetting.get()
   const defaultSetting = await getLimitSettingByDifficulty(
     previousSetting.difficulty
   )
   if (defaultSetting === undefined) return
-  await saveLimitSetting(defaultSetting)
+  await limitSetting.save(defaultSetting)
 }
 
 startHub()

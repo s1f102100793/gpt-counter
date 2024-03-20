@@ -10,9 +10,8 @@ import {
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
-  getLimitSetting,
+  limitSetting as limitUtils,
   normalLimitSetting,
-  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
@@ -56,7 +55,7 @@ const HeaderCurrentStatus = () => {
         codeLimit: Number.MAX_SAFE_INTEGER
       }
       setLimitSetting(unlimitedSetting)
-      await saveLimitSetting(unlimitedSetting)
+      await limitUtils.save(unlimitedSetting)
     }
   }
 
@@ -74,7 +73,7 @@ const HeaderCurrentStatus = () => {
     })
   }
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
   }

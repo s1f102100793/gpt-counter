@@ -9,11 +9,9 @@ import {
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
-  checkLimitRemoved,
-  getLimitSetting,
   getLimitSettingByDifficulty,
+  limitSetting as limitUtils,
   normalLimitSetting,
-  saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -62,9 +60,9 @@ const Popup = () => {
     const newDifficulty = event.target.value
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
-    newSetting = checkLimitRemoved(limitSetting, newSetting)
+    newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
-    await saveLimitSetting(newSetting)
+    await limitUtils.save(newSetting)
   }
 
   const fetchLayoutSetting = async () => {
@@ -74,7 +72,7 @@ const Popup = () => {
     })
   }
   const fetchLimitSetting = async () => {
-    await getLimitSetting().then((setting) => {
+    await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
   }
