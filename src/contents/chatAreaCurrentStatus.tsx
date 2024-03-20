@@ -39,6 +39,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 
 export const getShadowHostId = () => "chatarea-current-status"
 
+// eslint-disable-next-line complexity
 const ChatAreaCurrentStatus = () => {
   const [count, setCount] = useState(0)
   const [codeCount, setCodeCount] = useState(0)
@@ -108,9 +109,11 @@ const ChatAreaCurrentStatus = () => {
           <div className={styles.content}>
             質問数の制限になりました。本日は使用できません。
           </div>
-          <button onClick={removeLimit} className={styles.removeLimitButton}>
-            今日は制限を無くす。
-          </button>
+          {limitSetting.canLimitRemoved === true && (
+            <button onClick={removeLimit} className={styles.removeLimitButton}>
+              今日は制限を無くす。
+            </button>
+          )}
         </div>
       </div>
     )
@@ -124,9 +127,11 @@ const ChatAreaCurrentStatus = () => {
           <div className={styles.content}>
             コードの出力数が制限に達しました。本日は使用できません。
           </div>
-          <button onClick={removeLimit} className={styles.removeLimitButton}>
-            今日は制限を無くす。
-          </button>
+          {limitSetting.canLimitRemoved === true && (
+            <button onClick={removeLimit} className={styles.removeLimitButton}>
+              今日は制限を無くす。
+            </button>
+          )}
         </div>
       </div>
     )

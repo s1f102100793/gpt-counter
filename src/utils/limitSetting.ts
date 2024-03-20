@@ -8,24 +8,28 @@ export type LimitSettingType = {
   isCodeLimit?: boolean
   codeLimit?: number
   canChangeDifficulty: boolean
+  canLimitRemoved: boolean
 }
 export const easyLimitSetting: LimitSettingType = {
   difficulty: "easy",
   limit: 15,
   isLimitRemoved: false,
-  canChangeDifficulty: true
+  canChangeDifficulty: true,
+  canLimitRemoved: true
 } as const
 export const normalLimitSetting: LimitSettingType = {
   difficulty: "normal",
   limit: 10,
   isLimitRemoved: false,
-  canChangeDifficulty: true
+  canChangeDifficulty: true,
+  canLimitRemoved: true
 } as const
 export const hardLimitSetting: LimitSettingType = {
   difficulty: "hard",
   limit: 5,
   isLimitRemoved: false,
-  canChangeDifficulty: false
+  canChangeDifficulty: false,
+  canLimitRemoved: false
 } as const
 export const defaultCustomLimitSetting: LimitSettingType = {
   difficulty: "custom",
@@ -34,7 +38,8 @@ export const defaultCustomLimitSetting: LimitSettingType = {
   isCountOnly: false,
   isCodeLimit: false,
   codeLimit: 10,
-  canChangeDifficulty: true
+  canChangeDifficulty: true,
+  canLimitRemoved: true
 } as const
 
 export const limitSetting = {

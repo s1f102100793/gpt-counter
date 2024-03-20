@@ -36,6 +36,7 @@ export const getStyle = () => {
 
 export const getShadowHostId = () => "header-current-status"
 
+// eslint-disable-next-line complexity
 const HeaderCurrentStatus = () => {
   const [count, setCount] = useState(0)
   const [codeCount, setCodeCount] = useState(0)
@@ -96,17 +97,25 @@ const HeaderCurrentStatus = () => {
   if (statusDisplayConditions.limitAlert(remainingCounts, limitSetting))
     return (
       <div className={styles.container}>
-        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
-          質問数の制限になりました。本日は使用できません。
-        </div>
+        {limitSetting.canLimitRemoved === true ? (
+          <div onClick={removeLimit} style={{ cursor: "pointer" }}>
+            質問数の制限になりました。本日は使用できません。
+          </div>
+        ) : (
+          <div>質問数の制限になりました。本日は使用できません。</div>
+        )}
       </div>
     )
   if (statusDisplayConditions.codeLimitAlert(codeRemainingCounts, limitSetting))
     return (
       <div className={styles.container}>
-        <div onClick={removeLimit} style={{ cursor: "pointer" }}>
-          コードの出力数が制限に達しました。本日は使用できません。
-        </div>
+        {limitSetting.canLimitRemoved === true ? (
+          <div onClick={removeLimit} style={{ cursor: "pointer" }}>
+            コードの出力数が制限に達しました。本日は使用できません。
+          </div>
+        ) : (
+          <div>コードの出力数が制限に達しました。本日は使用できません。</div>
+        )}
       </div>
     )
   if (statusDisplayConditions.codeLimitDisplay(layoutSetting, limitSetting)) {
