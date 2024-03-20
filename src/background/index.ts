@@ -9,6 +9,7 @@ import "@plasmohq/messaging/background"
 
 import { codeCount } from "src/utils/count/codeCount"
 import { responseCount } from "src/utils/count/responseCount"
+import { layoutSetting } from "src/utils/layoutSetting"
 
 import { startHub } from "@plasmohq/messaging/pub-sub"
 
@@ -18,6 +19,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     setResetAlarm()
     await responseCount.createStorage()
     await codeCount.createStorage()
+    await layoutSetting.createStorage()
   }
 })
 

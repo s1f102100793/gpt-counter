@@ -5,8 +5,7 @@ import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import {
   defaultLayoutSetting,
-  getLayoutSetting,
-  saveLayoutSetting,
+  layoutSetting as layoutUtils,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
@@ -44,7 +43,7 @@ const Popup = () => {
   const handleSwitchChange = async (settingName: string, checked: boolean) => {
     const updatedSetting = { ...layoutSetting, [settingName]: checked }
     setLayoutSetting(updatedSetting)
-    await saveLayoutSetting(updatedSetting)
+    await layoutUtils.save(updatedSetting)
   }
   const handleCustomSwithChange = async () => {
     const newContent =
@@ -55,7 +54,7 @@ const Popup = () => {
     }
     setDisplayCount(newContent)
     setLayoutSetting(updatedSetting)
-    await saveLayoutSetting(updatedSetting)
+    await layoutUtils.save(updatedSetting)
   }
   const handleDifficultyChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -69,7 +68,7 @@ const Popup = () => {
   }
 
   const fetchLayoutSetting = async () => {
-    await getLayoutSetting().then((setting) => {
+    await layoutUtils.get().then((setting) => {
       setLayoutSetting(setting)
       setDisplayCount(setting.content)
     })

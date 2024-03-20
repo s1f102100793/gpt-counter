@@ -12,14 +12,15 @@ export const defaultLayoutSetting: LayoutSettingType = {
   content: "responseCount"
 }
 
-export const getLayoutSetting = async () => {
-  const layoutSetting = await storage.get(key.layoutSetting())
-  if (layoutSetting === null || layoutSetting === undefined)
-    return defaultLayoutSetting
-
-  return JSON.parse(layoutSetting)
-}
-
-export const saveLayoutSetting = async (setting: LayoutSettingType) => {
-  await storage.set(key.layoutSetting(), JSON.stringify(setting))
+export const layoutSetting = {
+  createStorage: async () => {
+    await storage.set(key.layoutSetting(), JSON.stringify(defaultLayoutSetting))
+  },
+  get: async () => {
+    const layoutSetting = (await storage.get(key.layoutSetting())) as string
+    return JSON.parse(layoutSetting)
+  },
+  save: async (setting: LayoutSettingType) => {
+    await storage.set(key.layoutSetting(), JSON.stringify(setting))
+  }
 }

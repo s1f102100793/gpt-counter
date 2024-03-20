@@ -6,7 +6,7 @@ import { responseCount } from "src/utils/count/responseCount"
 import { gptResponseClassName } from "src/utils/elements"
 import {
   defaultLayoutSetting,
-  getLayoutSetting,
+  layoutSetting as layoutUtils,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
@@ -69,7 +69,7 @@ const ChatAreaCurrentStatus = () => {
     })
   }
   const fetchLayoutSetting = async () => {
-    await getLayoutSetting().then((setting) => {
+    await layoutUtils.get().then((setting) => {
       setLayoutSetting(setting)
     })
   }

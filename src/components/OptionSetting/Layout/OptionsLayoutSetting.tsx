@@ -4,8 +4,7 @@ import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { changeSettingAlert } from "src/utils/alert"
 import {
   defaultLayoutSetting,
-  getLayoutSetting,
-  saveLayoutSetting as saveLayout,
+  layoutSetting as layoutUtils,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
 import {
@@ -51,11 +50,11 @@ const OptionsLayoutSetting = () => {
   const saveLayoutSetting = async () => {
     const userConfirmed = await changeSettingAlert()
     if (!userConfirmed) return
-    await saveLayout(layoutSetting)
+    await layoutUtils.save(layoutSetting)
   }
 
   const fetchLayoutSetting = async () => {
-    await getLayoutSetting().then((setting) => {
+    await layoutUtils.get().then((setting) => {
       setLayoutSetting(setting)
       setDisplayCount(setting.content)
     })
