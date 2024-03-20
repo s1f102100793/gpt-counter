@@ -37,7 +37,6 @@ export const getStyle = () => {
 
 export const getShadowHostId = () => "header-current-status"
 
-// eslint-disable-next-line complexity
 const HeaderCurrentStatus = () => {
   const [count, setCount] = useState(0)
   const [codeCount, setCodeCount] = useState(0)

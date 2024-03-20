@@ -40,7 +40,6 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 
 export const getShadowHostId = () => "chatarea-current-status"
 
-// eslint-disable-next-line complexity
 const ChatAreaCurrentStatus = () => {
   const [count, setCount] = useState(0)
   const [codeCount, setCodeCount] = useState(0)
