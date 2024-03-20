@@ -1,7 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
-import { getResponseDailyCount } from "src/utils/count/responseCount"
+import { responseCount } from "src/utils/count/responseCount"
 import {
   getLimitSetting,
   normalLimitSetting,
@@ -26,7 +26,7 @@ const HidePromptTextarea = () => {
     (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
 
   const fetchTodayCount = async () => {
-    await getResponseDailyCount().then((count) => {
+    await responseCount.getDaily().then((count) => {
       setCount(count)
     })
     await codeCountUtils.getDaily().then((count) => {

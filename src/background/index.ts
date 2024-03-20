@@ -3,26 +3,31 @@ import {
   getLimitSettingByDifficulty,
   saveLimitSetting
 } from "src/utils/limitSetting"
-import { key, storage, today } from "src/utils/storage"
+import { key } from "src/utils/storage"
 
 import "@plasmohq/messaging/background"
 
 import { codeCount } from "src/utils/count/codeCount"
+import { responseCount } from "src/utils/count/responseCount"
 
 import { startHub } from "@plasmohq/messaging/pub-sub"
 
-chrome.runtime.onInstalled.addListener(async () => {
-  setResetAlarm()
-  await initializeDailyCountStorage()
-  await codeCount.createStorage()
+chrome.runtime.onInstalled.addListener(async (details) => {
+  // 本番時には下の行を消す
+  if (details.reason === "install") {
+    setResetAlarm()
+    await responseCount.createStorage()
+    await codeCount.createStorage()
+  }
 })
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === key.resetLimit()) {
     await resetLimitSetting()
+    await responseCount.createDailyStorage()
+    await codeCount.createDailyStorage()
     chrome.alarms.clear(key.resetLimit())
     setResetAlarm()
-    await codeCount.createDailyStorage()
   }
 })
 
@@ -47,15 +52,6 @@ const resetLimitSetting = async () => {
   )
   if (defaultSetting === undefined) return
   await saveLimitSetting(defaultSetting)
-}
-
-const initializeDailyCountStorage = async () => {
-  const initialData = { [today]: 0 }
-
-  const existingData = await storage.get(key.gptResponses())
-  if (existingData === null || existingData === undefined) {
-    await storage.set(key.gptResponses(), initialData)
-  }
 }
 
 startHub()

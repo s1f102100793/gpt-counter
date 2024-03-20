@@ -1,9 +1,9 @@
 import { isBefore, parseISO, startOfMonth } from "date-fns"
 
-import { getResponseAllCounts } from "./count/responseCount"
+import { responseCount } from "./count/responseCount"
 
 export const findOldestDataMonth = async () => {
-  const allCounts = await getResponseAllCounts()
+  const allCounts = await responseCount.getAll()
   let oldestDate = new Date()
 
   Object.keys(allCounts).forEach((dateStr) => {

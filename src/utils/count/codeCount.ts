@@ -9,7 +9,7 @@ import {
 export const codeCount = {
   createStorage: async () => {
     const existingData = await storage.get(key.codeResponses())
-    if (existingData !== null && existingData !== undefined) {
+    if (existingData !== null || existingData !== undefined) {
       await storage.set(key.codeResponses(), initialData)
     }
   },
