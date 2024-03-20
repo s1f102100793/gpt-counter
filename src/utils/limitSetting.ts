@@ -32,50 +32,6 @@ export const defaultCustomLimitSetting: LimitSettingType = {
   codeLimit: 10
 } as const
 
-export const getCustomLimitSetting = async (): Promise<LimitSettingType> => {
-  const limitSetting = await storage.get(key.customLimitSetting())
-  if (limitSetting === null || limitSetting === undefined)
-    return defaultCustomLimitSetting
-
-  return JSON.parse(limitSetting)
-}
-export const saveCustomLimitSetting = async (setting: LimitSettingType) => {
-  await storage.set(key.customLimitSetting(), JSON.stringify(setting))
-}
-
-export const getLimitSettingByDifficulty = async (
-  difficulty: string
-): Promise<LimitSettingType | undefined> => {
-  switch (difficulty) {
-    case "easy":
-      return easyLimitSetting
-    case "normal":
-      return normalLimitSetting
-    case "hard":
-      return hardLimitSetting
-    case "custom":
-      return await getCustomLimitSetting()
-    default:
-      return undefined
-  }
-}
-export const getValueByLimitSetting = (
-  limitSettingType: LimitSettingType
-): number => {
-  switch (limitSettingType.difficulty) {
-    case "easy":
-      return 0
-    case "normal":
-      return 1
-    case "hard":
-      return 2
-    case "custom":
-      return 3
-    default:
-      return 0
-  }
-}
-
 export const limitSetting = {
   createStorage: async () => {
     await storage.set(key.limitSetting(), JSON.stringify(normalLimitSetting))
@@ -100,5 +56,55 @@ export const limitSetting = {
       }
     }
     return copySetting
+  }
+}
+
+export const customLimitSetting = {
+  createStorage: async () => {
+    await storage.set(
+      key.customLimitSetting(),
+      JSON.stringify(defaultCustomLimitSetting)
+    )
+  },
+  get: async (): Promise<LimitSettingType> => {
+    const limitSetting = (await storage.get(key.customLimitSetting())) as string
+    return JSON.parse(limitSetting)
+  },
+  save: async (setting: LimitSettingType) => {
+    await storage.set(key.customLimitSetting(), JSON.stringify(setting))
+  }
+}
+
+export const getLimitSettingByDifficulty = async (
+  difficulty: string
+): Promise<LimitSettingType | undefined> => {
+  switch (difficulty) {
+    case "easy":
+      return easyLimitSetting
+    case "normal":
+      return normalLimitSetting
+    case "hard":
+      return hardLimitSetting
+    case "custom":
+      return await customLimitSetting.get()
+    default:
+      return undefined
+  }
+}
+
+export const getValueByLimitSetting = (
+  limitSettingType: LimitSettingType
+): number => {
+  switch (limitSettingType.difficulty) {
+    case "easy":
+      return 0
+    case "normal":
+      return 1
+    case "hard":
+      return 2
+    case "custom":
+      return 3
+    default:
+      return 0
   }
 }

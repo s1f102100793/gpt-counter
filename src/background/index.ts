@@ -1,4 +1,5 @@
 import {
+  customLimitSetting,
   getLimitSettingByDifficulty,
   limitSetting
 } from "src/utils/limitSetting"
@@ -20,6 +21,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await codeCount.createStorage()
     await layoutSetting.createStorage()
     await limitSetting.createStorage()
+    await customLimitSetting.createStorage()
   }
 })
 

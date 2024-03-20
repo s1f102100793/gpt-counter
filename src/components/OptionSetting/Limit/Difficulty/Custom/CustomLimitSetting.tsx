@@ -4,9 +4,8 @@ import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import { changeSettingAlert } from "src/utils/alert"
 import {
-  getCustomLimitSetting,
+  customLimitSetting,
   limitSetting as limitUtils,
-  saveCustomLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
 
@@ -35,7 +34,7 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   const changeToCustomLimitSetting = async () => {
     const userConfirmed = await changeSettingAlert()
     if (!userConfirmed) return
-    const CustomLimitSetting = await getCustomLimitSetting()
+    const CustomLimitSetting = await customLimitSetting.get()
     let newSetting: LimitSettingType = {
       ...CustomLimitSetting,
       limit,
@@ -43,14 +42,14 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       isCodeLimit,
       codeLimit
     }
-    await saveCustomLimitSetting(newSetting)
+    await customLimitSetting.save(newSetting)
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
     await limitUtils.save(newSetting)
   }
 
   const fetchCustomLimitSetting = async () => {
-    await getCustomLimitSetting().then((setting) => {
+    await customLimitSetting.get().then((setting) => {
       setLimit(setting.limit)
       setIsCountOnly(setting.isCountOnly as boolean)
       setIsCodeLimit(setting.isCodeLimit as boolean)
