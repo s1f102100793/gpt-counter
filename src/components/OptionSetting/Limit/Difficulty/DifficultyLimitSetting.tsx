@@ -14,7 +14,7 @@ const DifficultyLimitSetting: React.FC<DifficultyLimitSettingProps> = ({
 }) => {
   return (
     <div className={styles.container}>
-      <ul>
+      <ul className={styles.difficultyContent}>
         <li>質問可能回数:{limitSetting.limit}回</li>
         <li>
           {limitSetting.canChangeDifficulty ? (

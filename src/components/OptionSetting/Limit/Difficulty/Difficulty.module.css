@@ -18,6 +18,12 @@
   justify-content: space-between;
 }
 
+.difficultyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .divWithMarker::before {
   content: "";
   display: inline-block;
