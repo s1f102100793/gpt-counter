@@ -3,6 +3,8 @@ import { FormControlLabel } from "@mui/material"
 import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
+import { alertUtils } from "src/utils/alert"
+import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
   layoutSetting as layoutUtils,
@@ -57,6 +59,11 @@ const Popup = () => {
   const handleDifficultyChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    const todayCount = await responseCount.getDaily()
+    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+      await alertUtils.cannotChangeDifficulty()
+      return
+    }
     const newDifficulty = event.target.value
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return

@@ -1,7 +1,7 @@
 import { FormControlLabel } from "@mui/material"
 import { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
-import { changeSettingAlert } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert"
 import {
   defaultLayoutSetting,
   layoutSetting as layoutUtils,
@@ -48,7 +48,7 @@ const OptionsLayoutSetting = () => {
     setLayoutSetting(updatedSetting)
   }
   const saveLayoutSetting = async () => {
-    const userConfirmed = await changeSettingAlert()
+    const userConfirmed = await alertUtils.changeSetting()
     if (!userConfirmed) return
     await layoutUtils.save(layoutSetting)
   }

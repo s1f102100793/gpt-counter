@@ -2,7 +2,8 @@ import { FormControlLabel } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { changeSettingAlert } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert"
+import { responseCount } from "src/utils/count/responseCount"
 import {
   customLimitSetting,
   limitSetting as limitUtils,
@@ -32,7 +33,12 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
     setCodeLimit(Number(event.target.value))
   }
   const changeToCustomLimitSetting = async () => {
-    const userConfirmed = await changeSettingAlert()
+    const todayCount = await responseCount.getDaily()
+    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+      await alertUtils.cannotChangeDifficulty()
+      return
+    }
+    const userConfirmed = await alertUtils.changeSetting()
     if (!userConfirmed) return
     const CustomLimitSetting = await customLimitSetting.get()
     let newSetting: LimitSettingType = {

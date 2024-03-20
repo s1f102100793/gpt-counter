@@ -1,9 +1,12 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import { changeSettingAlert } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert"
+import { responseCount } from "src/utils/count/responseCount"
 import {
+  easyLimitSetting,
   getLimitSettingByDifficulty,
   getValueByLimitSetting,
+  hardLimitSetting,
   limitSetting as limitUtils,
   normalLimitSetting,
   type LimitSettingType
@@ -12,9 +15,7 @@ import {
 import { a11yProps } from "../../mui/a11yProps"
 import { TabPanel } from "../../mui/TabPanel"
 import CustomLimitSetting from "./Difficulty/Custom/CustomLimitSetting"
-import EasyLimitSetting from "./Difficulty/Easy/EasyLimitSetting"
-import HardLimitSetting from "./Difficulty/Hard/HardLimitSetting"
-import NormalLimitSetting from "./Difficulty/Normal/NormalLimitSetting"
+import DifficultyLimitSetting from "./Difficulty/DifficultyLimitSetting"
 import styles from "./OptionLimitSetting.module.css"
 
 const OptionsLimitSetting = () => {
@@ -27,7 +28,12 @@ const OptionsLimitSetting = () => {
   }
 
   const handleDifficultyChange = async (difficulty: string) => {
-    const userConfirmed = await changeSettingAlert()
+    const todayCount = await responseCount.getDaily()
+    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+      await alertUtils.cannotChangeDifficulty()
+      return
+    }
+    const userConfirmed = await alertUtils.changeSetting()
     if (!userConfirmed) return
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
@@ -55,19 +61,28 @@ const OptionsLimitSetting = () => {
     {
       label: "イージー",
       content: (
-        <EasyLimitSetting handleDifficultyChange={handleDifficultyChange} />
+        <DifficultyLimitSetting
+          handleDifficultyChange={handleDifficultyChange}
+          limitSetting={easyLimitSetting}
+        />
       )
     },
     {
       label: "ノーマル",
       content: (
-        <NormalLimitSetting handleDifficultyChange={handleDifficultyChange} />
+        <DifficultyLimitSetting
+          handleDifficultyChange={handleDifficultyChange}
+          limitSetting={normalLimitSetting}
+        />
       )
     },
     {
       label: "ハード",
       content: (
-        <HardLimitSetting handleDifficultyChange={handleDifficultyChange} />
+        <DifficultyLimitSetting
+          handleDifficultyChange={handleDifficultyChange}
+          limitSetting={hardLimitSetting}
+        />
       )
     },
     {
