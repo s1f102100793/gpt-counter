@@ -100,7 +100,8 @@ const ChatAreaCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (statusDisplayConditions.null(layoutSetting, limitSetting)) return null
+  if (statusDisplayConditions.chatAreaNull(layoutSetting, limitSetting))
+    return null
 
   if (statusDisplayConditions.limitAlert(remainingCounts, limitSetting)) {
     return (

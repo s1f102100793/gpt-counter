@@ -2,9 +2,22 @@ import type { LayoutSettingType } from "./layoutSetting"
 import type { LimitSettingType } from "./limitSetting"
 
 export const statusDisplayConditions = {
-  null: (layoutSetting: LayoutSettingType, limitSetting: LimitSettingType) => {
+  chatAreaNull: (
+    layoutSetting: LayoutSettingType,
+    limitSetting: LimitSettingType
+  ) => {
     return (
       layoutSetting.afterGptResponse === false ||
+      limitSetting.isLimitRemoved === true ||
+      (limitSetting.isCountOnly === true && limitSetting.isCodeLimit === false)
+    )
+  },
+  headerNull: (
+    layoutSetting: LayoutSettingType,
+    limitSetting: LimitSettingType
+  ) => {
+    return (
+      layoutSetting.header === false ||
       limitSetting.isLimitRemoved === true ||
       (limitSetting.isCountOnly === true && limitSetting.isCodeLimit === false)
     )

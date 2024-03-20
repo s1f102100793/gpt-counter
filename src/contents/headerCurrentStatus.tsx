@@ -92,7 +92,8 @@ const HeaderCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (statusDisplayConditions.null(layoutSetting, limitSetting)) return null
+  if (statusDisplayConditions.headerNull(layoutSetting, limitSetting))
+    return null
 
   if (statusDisplayConditions.limitAlert(remainingCounts, limitSetting))
     return (
