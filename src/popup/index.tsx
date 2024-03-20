@@ -3,7 +3,6 @@ import { FormControlLabel } from "@mui/material"
 import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { alertUtils } from "src/utils/alert"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
@@ -27,6 +26,7 @@ const Popup = () => {
   const [customDisplayCount, setDisplayCount] = useState<
     "responseCount" | "codeCount"
   >("responseCount")
+  const [isAlertOpen, setAlertOpen] = useState(false)
 
   const translateSettingName = (settingName: string): string => {
     const nameMap: Record<string, string> = {
@@ -59,12 +59,12 @@ const Popup = () => {
   const handleDifficultyChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    const newDifficulty = event.target.value
     const todayCount = await responseCount.getDaily()
     if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
-      await alertUtils.cannotChangeDifficulty()
+      setAlertOpen(true)
       return
     }
-    const newDifficulty = event.target.value
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
@@ -106,7 +106,14 @@ const Popup = () => {
         />
       </div>
       <div className={styles.limitSetting}>
-        <div className={styles.settingHeader}>設定</div>
+        <div className={styles.settingHeader}>
+          <div>設定</div>
+          {isAlertOpen && (
+            <div className={styles.settingHeaderAlert}>
+              ※本日は質問しているため、設定を変更できません
+            </div>
+          )}
+        </div>
         <select
           className={styles.limitSelect}
           value={limitSetting.difficulty}
