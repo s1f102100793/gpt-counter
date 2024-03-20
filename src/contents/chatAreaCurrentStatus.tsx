@@ -15,6 +15,7 @@ import {
   saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
 
 import styles from "./styles/chatAreaCurrentStatus.module.css"
 
@@ -99,14 +100,9 @@ const ChatAreaCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (
-    layoutSetting.afterGptResponse === false ||
-    limitSetting.isLimitRemoved === true ||
-    (limitSetting.isCountOnly === true && limitSetting.isCodeLimit === false)
-  )
-    return null
+  if (statusDisplayConditions.null(layoutSetting, limitSetting)) return null
 
-  if (remainingCounts <= 0 && limitSetting.isCountOnly === false) {
+  if (statusDisplayConditions.limitAlert(remainingCounts, limitSetting)) {
     return (
       <div className={styles.statusContainer}>
         <div className={styles.alertContainer}>
@@ -120,7 +116,9 @@ const ChatAreaCurrentStatus = () => {
       </div>
     )
   }
-  if (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true) {
+  if (
+    statusDisplayConditions.codeLimitAlert(codeRemainingCounts, limitSetting)
+  ) {
     return (
       <div className={styles.statusContainer}>
         <div className={styles.alertContainer}>
@@ -134,14 +132,7 @@ const ChatAreaCurrentStatus = () => {
       </div>
     )
   }
-
-  if (
-    (layoutSetting.content === "codeCount" &&
-      limitSetting.difficulty === "custom" &&
-      limitSetting.isCodeLimit === true) ||
-    (layoutSetting.content === "responseCount" &&
-      limitSetting.isCountOnly === true)
-  ) {
+  if (statusDisplayConditions.codeLimitDisplay(layoutSetting, limitSetting)) {
     return (
       <div className={styles.statusContainer}>
         <div className={styles.container}>

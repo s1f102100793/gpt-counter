@@ -19,6 +19,11 @@ const HidePromptTextarea = () => {
   const [limitSetting, setLimitSetting] =
     useState<LimitSettingType>(normalLimitSetting)
   const [url, setUrl] = useState("")
+  const remainingCounts = limitSetting.limit - count
+  const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
+  const hideCondition =
+    (remainingCounts <= 0 && limitSetting.isCountOnly === false) ||
+    (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
 
   const fetchTodayCount = async () => {
     await getResponseDailyCount().then((count) => {
@@ -49,30 +54,16 @@ const HidePromptTextarea = () => {
   })
 
   useEffect(() => {
-    const remainingCounts = limitSetting.limit - count
-    const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
-    // eslint-disable-next-line complexity
     setTimeout(() => {
       const textarea = document.getElementById("prompt-textarea")
       if (!textarea) return
-      if (
-        (remainingCounts <= 0 && limitSetting.isCountOnly === false) ||
-        (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
-      ) {
+      if (hideCondition) {
         textarea.style.setProperty("display", "none", "important")
       } else {
         textarea.style.setProperty("display", "block", "important")
       }
     }, 100)
-  }, [
-    count,
-    codeCount,
-    url,
-    limitSetting.limit,
-    limitSetting.codeLimit,
-    limitSetting.isCountOnly,
-    limitSetting.isCodeLimit
-  ])
+  }, [url, remainingCounts, codeRemainingCounts, hideCondition])
 
   return null
 }

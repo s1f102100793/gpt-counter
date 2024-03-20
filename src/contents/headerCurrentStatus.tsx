@@ -15,6 +15,7 @@ import {
   saveLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
 
 import styles from "./styles/headerCurrentStatus.module.css"
 
@@ -91,13 +92,9 @@ const HeaderCurrentStatus = () => {
     fetchLimitSetting()
   })
 
-  if (
-    layoutSetting.header === false ||
-    limitSetting.isLimitRemoved === true ||
-    (limitSetting.isCountOnly === true && limitSetting.isCodeLimit === false)
-  )
-    return null
-  if (remainingCounts <= 0 && limitSetting.isCountOnly === false)
+  if (statusDisplayConditions.null(layoutSetting, limitSetting)) return null
+
+  if (statusDisplayConditions.limitAlert(remainingCounts, limitSetting))
     return (
       <div className={styles.container}>
         <div onClick={removeLimit} style={{ cursor: "pointer" }}>
@@ -105,7 +102,7 @@ const HeaderCurrentStatus = () => {
         </div>
       </div>
     )
-  if (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
+  if (statusDisplayConditions.codeLimitAlert(codeRemainingCounts, limitSetting))
     return (
       <div className={styles.container}>
         <div onClick={removeLimit} style={{ cursor: "pointer" }}>
@@ -113,14 +110,7 @@ const HeaderCurrentStatus = () => {
         </div>
       </div>
     )
-
-  if (
-    (layoutSetting.content === "codeCount" &&
-      limitSetting.difficulty === "custom" &&
-      limitSetting.isCodeLimit === true) ||
-    (layoutSetting.content === "responseCount" &&
-      limitSetting.isCountOnly === true)
-  ) {
+  if (statusDisplayConditions.codeLimitDisplay(layoutSetting, limitSetting)) {
     return (
       <div className={styles.container}>
         本日の残りコード出力回数は{codeRemainingCounts}回です。
