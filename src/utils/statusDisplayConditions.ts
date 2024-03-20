@@ -23,7 +23,11 @@ export const statusDisplayConditions = {
     )
   },
   limitAlert: (remainingCounts: number, limitSetting: LimitSettingType) => {
-    return remainingCounts <= 0 && limitSetting.isCountOnly === false
+    return (
+      remainingCounts <= 0 &&
+      (limitSetting.isCountOnly === false ||
+        limitSetting.difficulty !== "custom")
+    )
   },
   codeLimitAlert: (
     codeRemainingCounts: number,
