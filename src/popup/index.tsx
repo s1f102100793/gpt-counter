@@ -3,6 +3,7 @@ import { FormControlLabel } from "@mui/material"
 import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
+import { alertUtils } from "src/utils/alert"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
@@ -56,6 +57,7 @@ const Popup = () => {
     setLayoutSetting(updatedSetting)
     await layoutUtils.save(updatedSetting)
   }
+  // eslint-disable-next-line complexity
   const handleDifficultyChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -63,10 +65,16 @@ const Popup = () => {
     const todayCount = await responseCount.getDaily()
     if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
       setAlertOpen(true)
+      await alertUtils.cannotChangeDifficulty()
       return
     }
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
+    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+      const userConfirmed =
+        await alertUtils.changeSettingToCannotChangeDifficulty()
+      if (!userConfirmed) return
+    }
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
     await limitUtils.save(newSetting)
