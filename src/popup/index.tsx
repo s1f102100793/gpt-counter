@@ -4,6 +4,7 @@ import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import { alertUtils } from "src/utils/alert/alert"
+import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
@@ -63,14 +64,16 @@ const Popup = () => {
   ) => {
     const newDifficulty = event.target.value
     const todayCount = await responseCount.getDaily()
-    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (
+      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
+    ) {
       setAlertOpen(true)
       await alertUtils.cannotChangeDifficulty()
       return
     }
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
-    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
       const userConfirmed =
         await alertUtils.changeSettingToCannotChangeDifficulty()
       if (!userConfirmed) return

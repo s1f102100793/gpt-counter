@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
 import { alertUtils } from "src/utils/alert/alert"
+import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   customLimitSetting,
@@ -37,7 +38,9 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   // eslint-disable-next-line complexity
   const changeToCustomLimitSetting = async () => {
     const todayCount = await responseCount.getDaily()
-    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (
+      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
+    ) {
       await alertUtils.cannotChangeDifficulty()
       return
     }
@@ -51,7 +54,7 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       canChangeDifficulty,
       canLimitRemoved
     }
-    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
       const userConfirmed =
         await alertUtils.changeSettingToCannotChangeDifficulty()
       if (!userConfirmed) return

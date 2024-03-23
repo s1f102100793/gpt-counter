@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { alertUtils } from "src/utils/alert/alert"
+import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   easyLimitSetting,
@@ -29,13 +30,15 @@ const OptionsLimitSetting = () => {
   // eslint-disable-next-line complexity
   const handleDifficultyChange = async (difficulty: string) => {
     const todayCount = await responseCount.getDaily()
-    if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (
+      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
+    ) {
       await alertUtils.cannotChangeDifficulty()
       return
     }
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
-    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
       const userConfirmed =
         await alertUtils.changeSettingToCannotChangeDifficulty()
       if (!userConfirmed) return
