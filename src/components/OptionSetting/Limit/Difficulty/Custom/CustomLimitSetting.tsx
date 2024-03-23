@@ -24,6 +24,8 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   const [limit, setLimit] = useState<number>(0)
   const [isCodeLimit, setIsCodeLimit] = useState<boolean>(false)
   const [codeLimit, setCodeLimit] = useState<number>(0)
+  const [canChangeDifficulty, setCanChangeDifficulty] = useState<boolean>(true)
+  const [canLimitRemoved, setCanLimitRemoved] = useState<boolean>(true)
   const handleChangeLimit = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLimit(Number(event.target.value))
   }
@@ -46,7 +48,9 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       limit,
       isCountOnly,
       isCodeLimit,
-      codeLimit
+      codeLimit,
+      canChangeDifficulty,
+      canLimitRemoved
     }
     await customLimitSetting.save(newSetting)
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
@@ -60,6 +64,8 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       setIsCountOnly(setting.isCountOnly as boolean)
       setIsCodeLimit(setting.isCodeLimit as boolean)
       setCodeLimit(setting.codeLimit as number)
+      setCanChangeDifficulty(setting.canChangeDifficulty)
+      setCanLimitRemoved(setting.canLimitRemoved)
     })
   }
   useEffect(() => {
@@ -119,6 +125,40 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
             />
           </li>
         )}
+        <li className={styles.content}>
+          <div className={styles.divWithMarker}>
+            他の難易度に変更可能にする
+            <br />
+            {!canChangeDifficulty && (
+              <span>※1日に質問を行なっていない場合のみ変更可能</span>
+            )}
+          </div>
+          <FormControlLabel
+            sx={{ marginRight: "2px" }}
+            control={
+              <IOSSwitch
+                checked={canChangeDifficulty}
+                onChange={() => setCanChangeDifficulty(!canChangeDifficulty)}
+              />
+            }
+            label=""
+            labelPlacement="start"
+          />
+        </li>
+        <li className={styles.content}>
+          <div className={styles.divWithMarker}>制限を解除可能</div>
+          <FormControlLabel
+            sx={{ marginRight: "2px" }}
+            control={
+              <IOSSwitch
+                checked={canLimitRemoved}
+                onChange={() => setCanLimitRemoved(!canLimitRemoved)}
+              />
+            }
+            label=""
+            labelPlacement="start"
+          />
+        </li>
       </ul>
       <ChangeButton onClick={changeToCustomLimitSetting} />
     </div>
