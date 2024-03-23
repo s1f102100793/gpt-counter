@@ -1,7 +1,7 @@
 import { FormControlLabel } from "@mui/material"
 import { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
-import { alertUtils } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert/alert"
 import {
   defaultLayoutSetting,
   layoutSetting as layoutUtils,

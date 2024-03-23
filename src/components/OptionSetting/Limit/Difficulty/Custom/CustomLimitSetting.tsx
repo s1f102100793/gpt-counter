@@ -2,7 +2,7 @@ import { FormControlLabel } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { alertUtils } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert/alert"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   customLimitSetting,

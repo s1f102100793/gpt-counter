@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import { alertUtils } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert/alert"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   easyLimitSetting,

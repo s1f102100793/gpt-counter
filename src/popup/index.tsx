@@ -3,7 +3,7 @@ import { FormControlLabel } from "@mui/material"
 import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { alertUtils } from "src/utils/alert"
+import { alertUtils } from "src/utils/alert/alert"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
