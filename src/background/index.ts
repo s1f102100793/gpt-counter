@@ -14,14 +14,13 @@ import { layoutSetting } from "src/utils/layoutSetting"
 import { startHub } from "@plasmohq/messaging/pub-sub"
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  // 本番時には下の行を消す
   if (details.reason === "install") {
-    setResetAlarm()
     await responseCount.createStorage()
     await codeCount.createStorage()
     await layoutSetting.createStorage()
     await limitSetting.createStorage()
     await customLimitSetting.createStorage()
+    setResetAlarm()
   }
 })
 

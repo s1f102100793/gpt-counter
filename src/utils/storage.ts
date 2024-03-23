@@ -15,7 +15,7 @@ export const key = {
   codeResponses: () => "codeResponses"
 }
 
-const CurrentDateInJST = (): string => {
+export const CurrentDateInJST = (): string => {
   const now = new Date()
   const formatter = new Intl.DateTimeFormat("ja-JP", {
     timeZone: "Asia/Tokyo",
@@ -27,10 +27,9 @@ const CurrentDateInJST = (): string => {
   const [year, month, day] = formattedDate.split("-")
   return `${year}-${month}-${day}`
 }
-export const today = CurrentDateInJST()
 
 export const initialData = {
-  [today]: {
+  [CurrentDateInJST()]: {
     "3.5": 0,
     "4": 0
   }

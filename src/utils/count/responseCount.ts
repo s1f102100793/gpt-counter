@@ -1,8 +1,8 @@
 import {
+  CurrentDateInJST,
   initialData,
   key,
   storage,
-  today,
   type CountStorageType
 } from "../storage"
 
@@ -14,6 +14,7 @@ export const responseCount = {
     }
   },
   createDailyStorage: async () => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.gptResponses()
     )) as CountStorageType
@@ -26,6 +27,7 @@ export const responseCount = {
     }
   },
   getDaily: async (): Promise<number> => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.gptResponses()
     )) as CountStorageType
@@ -35,6 +37,7 @@ export const responseCount = {
     return (await storage.get(key.gptResponses())) as CountStorageType
   },
   updateDaily: async (event: string) => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.gptResponses()
     )) as CountStorageType

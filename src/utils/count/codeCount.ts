@@ -1,8 +1,8 @@
 import {
+  CurrentDateInJST,
   initialData,
   key,
   storage,
-  today,
   type CountStorageType
 } from "../storage"
 
@@ -14,6 +14,7 @@ export const codeCount = {
     }
   },
   createDailyStorage: async () => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.codeResponses()
     )) as CountStorageType
@@ -26,12 +27,14 @@ export const codeCount = {
     }
   },
   getDaily: async (): Promise<number> => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.codeResponses()
     )) as CountStorageType
     return allCounts[today]["3.5"] + allCounts[today]["4"]
   },
   updateDaily: async (event: string) => {
+    const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.codeResponses()
     )) as CountStorageType
