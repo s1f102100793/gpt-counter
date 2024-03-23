@@ -26,17 +26,23 @@ const OptionsLimitSetting = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
-
+  // eslint-disable-next-line complexity
   const handleDifficultyChange = async (difficulty: string) => {
     const todayCount = await responseCount.getDaily()
     if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
       await alertUtils.cannotChangeDifficulty()
       return
     }
-    const userConfirmed = await alertUtils.changeSetting()
-    if (!userConfirmed) return
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
+    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+      const userConfirmed =
+        await alertUtils.changeSettingToCannotChangeDifficulty()
+      if (!userConfirmed) return
+    } else {
+      const userConfirmed = await alertUtils.changeSetting()
+      if (!userConfirmed) return
+    }
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)

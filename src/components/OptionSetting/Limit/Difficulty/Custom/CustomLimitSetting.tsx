@@ -34,14 +34,13 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   ) => {
     setCodeLimit(Number(event.target.value))
   }
+  // eslint-disable-next-line complexity
   const changeToCustomLimitSetting = async () => {
     const todayCount = await responseCount.getDaily()
     if (limitSetting.canChangeDifficulty === false && todayCount > 0) {
       await alertUtils.cannotChangeDifficulty()
       return
     }
-    const userConfirmed = await alertUtils.changeSetting()
-    if (!userConfirmed) return
     const CustomLimitSetting = await customLimitSetting.get()
     let newSetting: LimitSettingType = {
       ...CustomLimitSetting,
@@ -51,6 +50,14 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       codeLimit,
       canChangeDifficulty,
       canLimitRemoved
+    }
+    if (newSetting.canChangeDifficulty === false && todayCount > 0) {
+      const userConfirmed =
+        await alertUtils.changeSettingToCannotChangeDifficulty()
+      if (!userConfirmed) return
+    } else {
+      const userConfirmed = await alertUtils.changeSetting()
+      if (!userConfirmed) return
     }
     await customLimitSetting.save(newSetting)
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
@@ -146,7 +153,9 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
           />
         </li>
         <li className={styles.content}>
-          <div className={styles.divWithMarker}>質問回数の制限を解除可能にする</div>
+          <div className={styles.divWithMarker}>
+            質問回数の制限を解除可能にする
+          </div>
           <FormControlLabel
             sx={{ marginRight: "2px" }}
             control={
