@@ -152,7 +152,7 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
         </li>
         <li className={styles.content}>
           <div className={styles.divWithMarker}>
-            質問回数の制限を解除可能にする
+            制限到達時に質問回数の制限を解除可能にする
           </div>
           <FormControlLabel
             sx={{ marginRight: "2px" }}

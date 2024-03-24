@@ -29,8 +29,8 @@ const DifficultyLimitSetting: React.FC<DifficultyLimitSettingProps> = ({
         </li>
         <li>
           {limitSetting.canLimitRemoved
-            ? "質問回数の制限を解除可能"
-            : "質問回数の制限を解除不可能"}
+            ? "制限到達時に質問回数の制限を解除可能"
+            : "制限到達時に質問回数の制限を解除不可能"}
         </li>
       </ul>
       <ChangeButton
