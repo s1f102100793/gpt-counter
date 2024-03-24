@@ -45,7 +45,7 @@ const setResetAlarm = () => {
     0
   )
   const when = nextMidnight.getTime()
-  chrome.alarms.create(key.resetLimit(), { when, periodInMinutes: 24 * 60 })
+  chrome.alarms.create(key.resetLimit(), { when })
 }
 
 const resetLimitSetting = async () => {
