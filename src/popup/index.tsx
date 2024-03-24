@@ -3,8 +3,6 @@ import { FormControlLabel } from "@mui/material"
 import settingIcon from "data-base64:~/assets/settingIcon.png"
 import { useEffect, useState } from "react"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { alertUtils } from "src/utils/alert/alert"
-import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   defaultLayoutSetting,
@@ -17,6 +15,7 @@ import {
   normalLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { userMessages } from "src/utils/userMessages"
 
 import styles from "./index.module.css"
 
@@ -58,26 +57,25 @@ const Popup = () => {
     setLayoutSetting(updatedSetting)
     await layoutUtils.save(updatedSetting)
   }
-  // eslint-disable-next-line complexity
+
   const handleDifficultyChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newDifficulty = event.target.value
     const todayCount = await responseCount.getDaily()
-    if (
-      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
-    ) {
-      setAlertOpen(true)
-      await alertUtils.cannotChangeDifficulty()
-      return
-    }
+    const proceedWithDifficulty = await userMessages.cannotChangeDifficulty(
+      limitSetting,
+      todayCount,
+      setAlertOpen
+    )
+    if (!proceedWithDifficulty) return
     let newSetting = await getLimitSettingByDifficulty(newDifficulty)
     if (newSetting === undefined) return
-    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
-      const userConfirmed =
-        await alertUtils.changeSettingToCannotChangeDifficulty()
-      if (!userConfirmed) return
-    }
+    const proceedWithSettings = await userMessages.confirmChangeDifficulty(
+      newSetting,
+      todayCount
+    )
+    if (!proceedWithSettings) return
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)
     await limitUtils.save(newSetting)

@@ -2,14 +2,13 @@ import { FormControlLabel } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { IOSSwitch } from "src/components/mui/IosSwitch"
-import { alertUtils } from "src/utils/alert/alert"
-import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   customLimitSetting,
   limitSetting as limitUtils,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { userMessages } from "src/utils/userMessages"
 
 import styles from "../Difficulty.module.css"
 
@@ -35,15 +34,14 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
   ) => {
     setCodeLimit(Number(event.target.value))
   }
-  // eslint-disable-next-line complexity
+
   const changeToCustomLimitSetting = async () => {
     const todayCount = await responseCount.getDaily()
-    if (
-      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
-    ) {
-      await alertUtils.cannotChangeDifficulty()
-      return
-    }
+    const proceedWithDifficulty = await userMessages.cannotChangeDifficulty(
+      limitSetting,
+      todayCount
+    )
+    if (!proceedWithDifficulty) return
     const CustomLimitSetting = await customLimitSetting.get()
     let newSetting: LimitSettingType = {
       ...CustomLimitSetting,
@@ -54,14 +52,11 @@ const CustomLimitSetting: React.FC<CustomLimitSettingProps> = ({
       canChangeDifficulty,
       canLimitRemoved
     }
-    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
-      const userConfirmed =
-        await alertUtils.changeSettingToCannotChangeDifficulty()
-      if (!userConfirmed) return
-    } else {
-      const userConfirmed = await alertUtils.changeSetting()
-      if (!userConfirmed) return
-    }
+    const proceedWithSettings = await userMessages.confirmChangeSettings(
+      newSetting,
+      todayCount
+    )
+    if (!proceedWithSettings) return
     await customLimitSetting.save(newSetting)
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setLimitSetting(newSetting)

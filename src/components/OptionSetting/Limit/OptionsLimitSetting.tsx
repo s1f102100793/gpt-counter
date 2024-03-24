@@ -1,7 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import { alertUtils } from "src/utils/alert/alert"
-import { alertDisplayConditions } from "src/utils/alert/alertDisplayConditions"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   easyLimitSetting,
@@ -12,6 +10,7 @@ import {
   normalLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { userMessages } from "src/utils/userMessages"
 
 import { a11yProps } from "../../mui/a11yProps"
 import { TabPanel } from "../../mui/TabPanel"
@@ -27,25 +26,21 @@ const OptionsLimitSetting = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
-  // eslint-disable-next-line complexity
+
   const handleDifficultyChange = async (difficulty: string) => {
     const todayCount = await responseCount.getDaily()
-    if (
-      alertDisplayConditions.cannotChangeDifficulty(limitSetting, todayCount)
-    ) {
-      await alertUtils.cannotChangeDifficulty()
-      return
-    }
+    const proceedWithDifficulty = await userMessages.cannotChangeDifficulty(
+      limitSetting,
+      todayCount
+    )
+    if (!proceedWithDifficulty) return
     let newSetting = await getLimitSettingByDifficulty(difficulty)
     if (newSetting === undefined) return
-    if (alertDisplayConditions.cannotChangeDifficulty(newSetting, todayCount)) {
-      const userConfirmed =
-        await alertUtils.changeSettingToCannotChangeDifficulty()
-      if (!userConfirmed) return
-    } else {
-      const userConfirmed = await alertUtils.changeSetting()
-      if (!userConfirmed) return
-    }
+    const proceedWithSettings = await userMessages.confirmChangeSettings(
+      newSetting,
+      todayCount
+    )
+    if (!proceedWithSettings) return
     newSetting = limitUtils.checkLimitRemoved(limitSetting, newSetting)
     setValue(getValueByLimitSetting(newSetting))
     setLimitSetting(newSetting)
