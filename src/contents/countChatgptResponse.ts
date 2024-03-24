@@ -37,7 +37,6 @@ const observeDOMChanges = async (): Promise<void> => {
         if (gptModel === undefined || gptModel === null) {
           console.error("GPT model not found.")
         } else {
-          console.log("GPTResponseが1回増えました")
           await responseCount.updateDaily(gptModel)
         }
       }
