@@ -22,7 +22,9 @@ const HidePromptTextarea = () => {
   const remainingCounts = limitSetting.limit - count
   const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
   const hideCondition =
-    (remainingCounts <= 0 && limitSetting.isCountOnly === false) ||
+    (remainingCounts <= 0 &&
+      (limitSetting.isCountOnly === false ||
+        limitSetting.isCodeLimit === undefined)) ||
     (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
 
   const fetchTodayCount = async () => {
