@@ -59,7 +59,7 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://chat.openai.com/*"
     ],
     "permissions": [
       "storage",
