@@ -33,6 +33,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
     "happy-css-modules": "^2.1.2",
+    "jotai": "^2.7.2",
     "less": "^4.2.0",
     "plasmo": "0.85.2",
     "postcss": "^8.4.35",
