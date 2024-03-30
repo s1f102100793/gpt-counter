@@ -1,5 +1,7 @@
 import { FormControlLabel } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useAtom } from "jotai"
+import { useCallback, useEffect, useState } from "react"
+import { limitSettingAtom } from "src/atoms/settings"
 import { ChangeButton } from "src/components/Button/ChangeButton/ChangeButton"
 import { alertUtils } from "src/utils/alert/alert"
 import {
@@ -7,11 +9,7 @@ import {
   layoutSetting as layoutUtils,
   type LayoutSettingType
 } from "src/utils/layoutSetting"
-import {
-  limitSetting as limitUtils,
-  normalLimitSetting,
-  type LimitSettingType
-} from "src/utils/limitSetting"
+import { key } from "src/utils/storage"
 
 import { IOSSwitch } from "../../mui/IosSwitch"
 import styles from "./OptionLayoutSetting.module.css"
@@ -19,8 +17,7 @@ import styles from "./OptionLayoutSetting.module.css"
 const OptionsLayoutSetting = () => {
   const [layoutSetting, setLayoutSetting] =
     useState<LayoutSettingType>(defaultLayoutSetting)
-  const [limitSetting, setLimitSetting] =
-    useState<LimitSettingType>(normalLimitSetting)
+  const [limitSetting] = useAtom(limitSettingAtom)
   const [customDisplayCount, setDisplayCount] = useState<
     "responseCount" | "codeCount"
   >("responseCount")
@@ -53,25 +50,29 @@ const OptionsLayoutSetting = () => {
     await layoutUtils.save(layoutSetting)
   }
 
-  const fetchLayoutSetting = async () => {
+  const fetchLayoutSetting = useCallback(async () => {
     await layoutUtils.get().then((setting) => {
       setLayoutSetting(setting)
       setDisplayCount(setting.content)
     })
-  }
-  const fetchLimitSetting = async () => {
-    await limitUtils.get().then((setting) => {
-      setLimitSetting(setting)
-    })
-  }
+  }, [])
   useEffect(() => {
     fetchLayoutSetting()
-    fetchLimitSetting()
-  }, [])
-  chrome.storage.onChanged.addListener(() => {
-    fetchLayoutSetting()
-    fetchLimitSetting()
-  })
+  }, [fetchLayoutSetting])
+  useEffect(() => {
+    const onChangedListener = (changes: {
+      [key: string]: chrome.storage.StorageChange
+    }) => {
+      const changedItems = Object.keys(changes)[0]
+      if (changedItems === key.layoutSetting()) {
+        fetchLayoutSetting()
+      }
+    }
+    chrome.storage.onChanged.addListener(onChangedListener)
+    return () => {
+      chrome.storage.onChanged.removeListener(onChangedListener)
+    }
+  }, [fetchLayoutSetting])
 
   return (
     <div className={styles.container}>

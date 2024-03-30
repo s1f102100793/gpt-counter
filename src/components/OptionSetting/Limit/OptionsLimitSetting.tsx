@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { responseCount } from "src/utils/count/responseCount"
 import {
   easyLimitSetting,
@@ -10,6 +10,7 @@ import {
   normalLimitSetting,
   type LimitSettingType
 } from "src/utils/limitSetting"
+import { key } from "src/utils/storage"
 import { userMessages } from "src/utils/userMessages"
 
 import { a11yProps } from "../../mui/a11yProps"
@@ -47,19 +48,30 @@ const OptionsLimitSetting = () => {
     await limitUtils.save(newSetting)
   }
 
-  const fetchLimitSetting = async () => {
+  const fetchLimitSetting = useCallback(async () => {
     await limitUtils.get().then((setting) => {
       setValue(getValueByLimitSetting(setting))
       setLimitSetting(setting)
     })
-  }
+  }, [])
 
   useEffect(() => {
     fetchLimitSetting()
-  }, [])
-  chrome.storage.onChanged.addListener(() => {
-    fetchLimitSetting()
-  })
+  }, [fetchLimitSetting])
+  useEffect(() => {
+    const onChangedListener = (changes: {
+      [key: string]: chrome.storage.StorageChange
+    }) => {
+      const changedItems = Object.keys(changes)[0]
+      if (changedItems === key.limitSetting()) {
+        fetchLimitSetting()
+      }
+    }
+    chrome.storage.onChanged.addListener(onChangedListener)
+    return () => {
+      chrome.storage.onChanged.removeListener(onChangedListener)
+    }
+  }, [fetchLimitSetting])
 
   const tabData = [
     {
