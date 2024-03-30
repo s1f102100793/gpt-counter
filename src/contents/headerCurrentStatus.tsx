@@ -78,16 +78,24 @@ const HeaderCurrentStatus = () => {
     fetchLayoutSetting()
     fetchLimitSetting()
   }, [fetchTodayCount, fetchLayoutSetting, fetchLimitSetting])
-  chrome.storage.onChanged.addListener((changes) => {
-    const changedItems = Object.keys(changes)[0]
-    if (changedItems === key.gptResponses()) {
-      fetchTodayCount()
-    } else if (changedItems === key.layoutSetting()) {
-      fetchLayoutSetting()
-    } else if (changedItems === key.limitSetting()) {
-      fetchLimitSetting()
+  useEffect(() => {
+    const onChangedListener = (changes: {
+      [key: string]: chrome.storage.StorageChange
+    }) => {
+      const changedItems = Object.keys(changes)[0]
+      if (changedItems === key.gptResponses()) {
+        fetchTodayCount()
+      } else if (changedItems === key.layoutSetting()) {
+        fetchLayoutSetting()
+      } else if (changedItems === key.limitSetting()) {
+        fetchLimitSetting()
+      }
     }
-  })
+    chrome.storage.onChanged.addListener(onChangedListener)
+    return () => {
+      chrome.storage.onChanged.removeListener(onChangedListener)
+    }
+  }, [fetchLayoutSetting, fetchLimitSetting, fetchTodayCount])
 
   if (statusDisplayConditions.headerNull(layoutSetting, limitSetting))
     return null
