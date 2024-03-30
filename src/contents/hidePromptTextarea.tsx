@@ -1,12 +1,8 @@
+import { useAtom } from "jotai"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
-import { responseCount } from "src/utils/count/responseCount"
-import {
-  limitSetting as limitUtils,
-  normalLimitSetting,
-  type LimitSettingType
-} from "src/utils/limitSetting"
+import { codeCountAtom, responseCountAtom } from "src/atoms/counts"
+import { limitSettingAtom } from "src/atoms/settings"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -14,10 +10,9 @@ export const config: PlasmoCSConfig = {
 }
 
 const HidePromptTextarea = () => {
-  const [count, setCount] = useState(0)
-  const [codeCount, setCodeCount] = useState(0)
-  const [limitSetting, setLimitSetting] =
-    useState<LimitSettingType>(normalLimitSetting)
+  const [count] = useAtom(responseCountAtom)
+  const [codeCount] = useAtom(codeCountAtom)
+  const [limitSetting] = useAtom(limitSettingAtom)
   const [url, setUrl] = useState("")
   const remainingCounts = limitSetting.limit - count
   const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
@@ -27,28 +22,6 @@ const HidePromptTextarea = () => {
         limitSetting.isCodeLimit === undefined)) ||
     (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
 
-  const fetchTodayCount = async () => {
-    await responseCount.getDaily().then((count) => {
-      setCount(count)
-    })
-    await codeCountUtils.getDaily().then((count) => {
-      setCodeCount(count)
-    })
-  }
-  const fetchLimitSetting = async () => {
-    await limitUtils.get().then((setting) => {
-      setLimitSetting(setting)
-    })
-  }
-  useEffect(() => {
-    fetchTodayCount()
-    fetchLimitSetting()
-  }, [])
-
-  chrome.storage.onChanged.addListener(() => {
-    fetchTodayCount()
-    fetchLimitSetting()
-  })
   chrome.runtime.onMessage.addListener((message) => {
     if (message.name === "url") {
       setUrl(message.body.url)

@@ -1,19 +1,11 @@
 import styleText from "data-text:./styles/chatAreaCurrentStatus.module.css"
+import { useAtom } from "jotai"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import React, { useEffect, useState } from "react"
-import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
-import { responseCount } from "src/utils/count/responseCount"
+import React, { useEffect } from "react"
+import { codeCountAtom, responseCountAtom } from "src/atoms/counts"
+import { layoutSettingAtom, limitSettingAtom } from "src/atoms/settings"
 import { gptResponseClassName } from "src/utils/elements"
-import {
-  defaultLayoutSetting,
-  layoutSetting as layoutUtils,
-  type LayoutSettingType
-} from "src/utils/layoutSetting"
-import {
-  limitSetting as limitUtils,
-  normalLimitSetting,
-  type LimitSettingType
-} from "src/utils/limitSetting"
+import { limitSetting as limitUtils } from "src/utils/limitSetting"
 import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
 
 import styles from "./styles/chatAreaCurrentStatus.module.css"
@@ -41,12 +33,10 @@ export const getShadowHostId = () => "chatarea-current-status"
 
 // eslint-disable-next-line complexity
 const ChatAreaCurrentStatus = () => {
-  const [count, setCount] = useState(0)
-  const [codeCount, setCodeCount] = useState(0)
-  const [layoutSetting, setLayoutSetting] =
-    useState<LayoutSettingType>(defaultLayoutSetting)
-  const [limitSetting, setLimitSetting] =
-    useState<LimitSettingType>(normalLimitSetting)
+  const [count] = useAtom(responseCountAtom)
+  const [codeCount] = useAtom(codeCountAtom)
+  const [layoutSetting] = useAtom(layoutSettingAtom)
+  const [limitSetting, setLimitSetting] = useAtom(limitSettingAtom)
   const remainingCounts = limitSetting.limit - count
   const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
 
@@ -60,24 +50,6 @@ const ChatAreaCurrentStatus = () => {
     await limitUtils.save(unlimitedSetting)
     setLimitSetting(unlimitedSetting)
   }
-  const fetchTodayCount = async () => {
-    await responseCount.getDaily().then((count) => {
-      setCount(count)
-    })
-    await codeCountUtils.getDaily().then((count) => {
-      setCodeCount(count)
-    })
-  }
-  const fetchLayoutSetting = async () => {
-    await layoutUtils.get().then((setting) => {
-      setLayoutSetting(setting)
-    })
-  }
-  const fetchLimitSetting = async () => {
-    await limitUtils.get().then((setting) => {
-      setLimitSetting(setting)
-    })
-  }
 
   useEffect(() => {
     const allElements = document.querySelectorAll("#chatarea-current-status")
@@ -87,17 +59,6 @@ const ChatAreaCurrentStatus = () => {
       }
     }
   }, [count])
-
-  useEffect(() => {
-    fetchTodayCount()
-    fetchLayoutSetting()
-    fetchLimitSetting()
-  }, [])
-  chrome.storage.onChanged.addListener(() => {
-    fetchTodayCount()
-    fetchLayoutSetting()
-    fetchLimitSetting()
-  })
 
   if (statusDisplayConditions.chatAreaNull(layoutSetting, limitSetting))
     return null

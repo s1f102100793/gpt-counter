@@ -1,20 +1,16 @@
 import styleText from "data-text:./styles/headerCurrentStatus.module.css"
+import { useAtom } from "jotai"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
+import { codeCountAtom, responseCountAtom } from "src/atoms/counts"
+import { layoutSettingAtom, limitSettingAtom } from "src/atoms/settings"
 import { codeCount as codeCountUtils } from "src/utils/count/codeCount"
 import { responseCount } from "src/utils/count/responseCount"
 import { headerClassName } from "src/utils/elements"
-import {
-  defaultLayoutSetting,
-  layoutSetting as layoutUtils,
-  type LayoutSettingType
-} from "src/utils/layoutSetting"
-import {
-  limitSetting as limitUtils,
-  normalLimitSetting,
-  type LimitSettingType
-} from "src/utils/limitSetting"
+import { layoutSetting as layoutUtils } from "src/utils/layoutSetting"
+import { limitSetting as limitUtils } from "src/utils/limitSetting"
 import { statusDisplayConditions } from "src/utils/statusDisplayConditions"
+import { key } from "src/utils/storage"
 
 import styles from "./styles/headerCurrentStatus.module.css"
 
@@ -38,12 +34,10 @@ export const getShadowHostId = () => "header-current-status"
 
 // eslint-disable-next-line complexity
 const HeaderCurrentStatus = () => {
-  const [count, setCount] = useState(0)
-  const [codeCount, setCodeCount] = useState(0)
-  const [layoutSetting, setLayoutSetting] =
-    useState<LayoutSettingType>(defaultLayoutSetting)
-  const [limitSetting, setLimitSetting] =
-    useState<LimitSettingType>(normalLimitSetting)
+  const [count, setCount] = useAtom(responseCountAtom)
+  const [codeCount, setCodeCount] = useAtom(codeCountAtom)
+  const [layoutSetting, setLayoutSetting] = useAtom(layoutSettingAtom)
+  const [limitSetting, setLimitSetting] = useAtom(limitSettingAtom)
   const remainingCounts = limitSetting.limit - count
   const codeRemainingCounts = (limitSetting.codeLimit as number) - codeCount
 
@@ -60,35 +54,39 @@ const HeaderCurrentStatus = () => {
     }
   }
 
-  const fetchTodayCount = async () => {
+  const fetchTodayCount = useCallback(async () => {
     await responseCount.getDaily().then((count) => {
       setCount(count)
     })
     await codeCountUtils.getDaily().then((count) => {
       setCodeCount(count)
     })
-  }
-  const fetchLayoutSetting = async () => {
+  }, [setCount, setCodeCount])
+  const fetchLayoutSetting = useCallback(async () => {
     await layoutUtils.get().then((setting) => {
       setLayoutSetting(setting)
     })
-  }
-  const fetchLimitSetting = async () => {
+  }, [setLayoutSetting])
+  const fetchLimitSetting = useCallback(async () => {
     await limitUtils.get().then((setting) => {
       setLimitSetting(setting)
     })
-  }
+  }, [setLimitSetting])
 
   useEffect(() => {
     fetchTodayCount()
     fetchLayoutSetting()
     fetchLimitSetting()
-  }, [])
-
-  chrome.storage.onChanged.addListener(() => {
-    fetchTodayCount()
-    fetchLayoutSetting()
-    fetchLimitSetting()
+  }, [fetchTodayCount, fetchLayoutSetting, fetchLimitSetting])
+  chrome.storage.onChanged.addListener((changes) => {
+    const changedItems = Object.keys(changes)[0]
+    if (changedItems === key.gptResponses()) {
+      fetchTodayCount()
+    } else if (changedItems === key.layoutSetting()) {
+      fetchLayoutSetting()
+    } else if (changedItems === key.limitSetting()) {
+      fetchLimitSetting()
+    }
   })
 
   if (statusDisplayConditions.headerNull(layoutSetting, limitSetting))
