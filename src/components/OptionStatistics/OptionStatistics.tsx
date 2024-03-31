@@ -18,8 +18,9 @@ import { responseCount } from "src/utils/count/responseCount"
 import { findOldestDataMonth } from "src/utils/date-fns"
 import {
   calculateMonthlyStatistics,
-  updateChartData
+  transformChartJsChartData
 } from "src/utils/statistics"
+import type { CountStorageType } from "src/utils/storage"
 
 import styles from "./OptionStatistics.module.css"
 
@@ -73,8 +74,11 @@ const OptionStatistics = () => {
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
-  const getChartData = async (date: Date) => {
-    await updateChartData(date).then((chartData) => {
+  const getChartJsChartData = async (
+    date: Date,
+    allCounts: CountStorageType
+  ) => {
+    await transformChartJsChartData(date, allCounts).then((chartData) => {
       setData(chartData)
     })
   }
@@ -88,13 +92,13 @@ const OptionStatistics = () => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchStatisticsData = async () => {
       const allCounts = await responseCount.getAll()
+      getChartJsChartData(currentDate, allCounts)
       const stats = calculateMonthlyStatistics(allCounts, currentDate)
       setStatistics(stats)
     }
-    fetchData()
-    getChartData(currentDate)
+    fetchStatisticsData()
     fetchOldestDataMonth()
     setOptions((currentOptions) => ({
       ...currentOptions,
