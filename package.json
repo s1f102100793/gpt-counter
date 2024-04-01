@@ -1,7 +1,7 @@
 {
   "name": "gpt-counter",
   "displayName": "gpt-counter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ChatGPTの質問回数を制限、可視化する拡張機能",
   "author": "Gota Nakagawa",
   "scripts": {
