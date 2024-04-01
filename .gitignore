@@ -34,3 +34,6 @@ dist/
 
 *.css.d.ts
 *.css.d.ts.map
+
+key.json
+github-secrets.SUBMIT_KEYS.json
