@@ -22,8 +22,9 @@ const HidePromptTextarea = () => {
         limitSetting.isCodeLimit === undefined)) ||
     (codeRemainingCounts <= 0 && limitSetting.isCodeLimit === true)
 
+  const urlMessageName = "url"
   chrome.runtime.onMessage.addListener((message) => {
-    if (message.name === "url") {
+    if (message.name === urlMessageName) {
       setUrl(message.body.url)
     }
   })
