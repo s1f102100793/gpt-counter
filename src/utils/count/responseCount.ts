@@ -36,11 +36,17 @@ export const responseCount = {
   getAll: async (): Promise<CountStorageType> => {
     return (await storage.get(key.gptResponses())) as CountStorageType
   },
-  updateDaily: async (event: string) => {
+  updateDaily: async (event: "3.5" | "4") => {
     const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.gptResponses()
     )) as CountStorageType
+    if (allCounts[today] === undefined || allCounts[today] === null) {
+      allCounts[today] = { "3.5": 0, "4": 0 }
+    }
+    if (allCounts[today][event] === undefined) {
+      allCounts[today][event] = 0
+    }
     allCounts[today][event] += 1
     await storage.set(key.gptResponses(), allCounts)
   }

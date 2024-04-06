@@ -19,10 +19,7 @@ export const codeCount = {
       key.codeResponses()
     )) as CountStorageType
     if (allCounts[today] === undefined || allCounts[today] === null) {
-      allCounts[today] = {
-        "3.5": 0,
-        "4": 0
-      }
+      allCounts[today] = { "3.5": 0, "4": 0 }
       await storage.set(key.codeResponses(), allCounts)
     }
   },
@@ -38,6 +35,12 @@ export const codeCount = {
     const allCounts = (await storage.get(
       key.codeResponses()
     )) as CountStorageType
+    if (allCounts[today] === undefined || allCounts[today] === null) {
+      allCounts[today] = { "3.5": 0, "4": 0 }
+    }
+    if (allCounts[today][event] === undefined) {
+      allCounts[today][event] = 0
+    }
     allCounts[today][event] += 1
     await storage.set(key.codeResponses(), allCounts)
   }
