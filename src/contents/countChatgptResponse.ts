@@ -5,6 +5,7 @@ import {
   gptResponseClassName,
   gptResponseParentElements
 } from "src/utils/elements"
+import { isGptModel } from "src/utils/gptModel"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://chat.openai.com/*"],
@@ -34,7 +35,7 @@ const observeDOMChanges = async (): Promise<void> => {
       if (updateCount - currentCount === 1) {
         currentCount = updateCount
         const gptModel = document.querySelector(gptModelClassName)?.textContent
-        if (gptModel === undefined || gptModel === null) {
+        if (!isGptModel(gptModel)) {
           console.error("GPT model not found.")
         } else {
           await responseCount.updateDaily(gptModel)

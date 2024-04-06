@@ -1,3 +1,4 @@
+import type { GptModel } from "../gptModel"
 import {
   CurrentDateInJST,
   initialData,
@@ -36,7 +37,7 @@ export const responseCount = {
   getAll: async (): Promise<CountStorageType> => {
     return (await storage.get(key.gptResponses())) as CountStorageType
   },
-  updateDaily: async (event: "3.5" | "4") => {
+  updateDaily: async (event: GptModel) => {
     const today = CurrentDateInJST()
     const allCounts = (await storage.get(
       key.gptResponses()
